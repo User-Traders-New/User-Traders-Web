@@ -1,55 +1,62 @@
+<!-- <div>
+		<h1>
+			{{ title }}
+		</h1>
+		<p>{{ count }}</p>
+		<button @click="count++">추가</button>
+		<v-app>
+			<v-content>
+				<User />
+			</v-content>
+		</v-app>
+	</div> -->
+
 <template>
-  <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-main>
-      <router-view/>
-    </v-main>
-  </v-app>
+	<v-app id="inspire">
+		<v-navigation-drawer v-model="drawer" fixed app>
+			<v-list dense>
+				<v-list-tile>
+					<v-list-tile-action>
+						<i class="fas fa-home"></i>
+					</v-list-tile-action>
+					<v-list-tile-content>
+						<v-list-tile-title>Home</v-list-tile-title>
+					</v-list-tile-content>
+				</v-list-tile>
+				<v-list-tile>
+					<v-list-tile-action>
+						<i class="fas fa-user"></i>
+					</v-list-tile-action>
+					<v-list-tile-content>
+						<v-list-tile-title>About</v-list-tile-title>
+					</v-list-tile-content>
+				</v-list-tile>
+			</v-list>
+		</v-navigation-drawer>
+		<v-toolbar color="indigo" dark fixed app>
+			<v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+			<v-toolbar-title>Application</v-toolbar-title>
+		</v-toolbar>
+		<v-content> <router-view></router-view></v-content>
+		<v-footer color="indigo" app>
+			<span class="white--text">&copy; 2017</span>
+		</v-footer>
+	</v-app>
 </template>
 
 <script>
-
 export default {
-  name: 'App',
+	name: 'App',
+	props: {
+		source: String,
+	},
 
-  data: () => ({
-    //
-  }),
+	data: () => ({
+		title: '안녕하세요.',
+		count: 0,
+		drawer: null,
+	}),
+	methods: {},
+	computed: {},
 };
 </script>
