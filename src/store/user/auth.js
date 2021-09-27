@@ -1,8 +1,12 @@
 import http from '@/utils/http';
 import router from '@/router/index.js';
+
 const state = {
+	jwt: null,
+	profileImg: '',
 	isLogin: false,
 	isLoginError: false,
+	// isLogined: false,
 };
 
 const getters = {};
@@ -13,9 +17,10 @@ const actions = {
 			.process('user', 'login', loginObj)
 			.then((res) => {
 				console.log(res.user);
-				console.log(res.payload.message + '@@@');
+				console.log(res.payload.message);
 				if (res.payload.message == '로그인에 성공하였습니다.') {
 					commit('setLoginToken', res.token);
+					commit('setLoginImg', res.user.imagePath);
 					localStorage.setItem('user', res.user);
 
 					console.log(localStorage.getItem('user'));
@@ -26,9 +31,10 @@ const actions = {
 							console.log(res);
 
 							commit('setUserInfo', res);
-							console.log('로그인 되었습니다.');
-							alert('로그인 되었습니다.');
-							router.push({ name: 'Home' }).catch(() => {});
+							// console.log('@@@@@@@@@@@');
+							// console.log('로그인 되었습니다.');
+							// alert('로그인 되었습니다.');
+							// router.push({ name: 'Home' }).catch(() => {});
 						})
 						.catch((err) => {
 							console.log(err);
@@ -37,15 +43,16 @@ const actions = {
 					console.log('가입 되지 않은 email 입니다.');
 					alert('가입 되지 않은 email 입니다.');
 					commit('logoutState');
-					return router.push({ name: 'UserLogin' }).catch(() => {});
+					// return router.push({ name: 'UserLogin' }).catch(() => {});
 					// return this.$router.push(this.$route.query.redirect || '/user/login');
 				} else if (res.payload.message == '비밀번호를 잘못 입력 하셨습니다.') {
 					console.log('비밀번호를 잘못 입력 하셨습니다.');
 					alert('비밀번호를 잘못 입력 하셨습니다.');
 					commit('logoutState');
-					return router.push({ name: 'UserLogin' }).catch(() => {});
+					// return router.push({ name: 'UserLogin' }).catch(() => {});
 					// return this.$router.push(this.$route.query.redirect || '/user/login');
 				}
+				return res;
 			})
 			.catch((err) => {
 				console.log(err);
@@ -57,11 +64,11 @@ const actions = {
 				) {
 					alert(err.message);
 					commit('logoutState');
-					return router.push({ name: 'UserLogin' }).catch(() => {});
+					// return router.push({ name: 'UserLogin' }).catch(() => {});
 					// return this.$router.push(this.$route.query.redirect || '/user/login');
 				}
 				commit('logoutState');
-				return router.push({ name: 'UserLogin' }).catch(() => {});
+				// return router.push({ name: 'UserLogin' }).catch(() => {});
 				// return this.$router.push(this.$route.query.redirect || '/user/login');
 			});
 	},
@@ -84,6 +91,10 @@ const actions = {
 		this.$router.push({ name: 'UserLogin' });
 	},
 
+	// isLogined({ commit }, isLogined) {
+	// 	commit('isLogined', isLogined);
+	// 	this.$router.push({ name: 'Home' });
+	// },
 	login({ state, commit }, loginObj) {
 		let selectUser = null;
 		state.memberUser.forEach((user) => {
@@ -101,9 +112,13 @@ const actions = {
 
 const mutations = {
 	//로그인 성공
-	setLoginToken(state) {
+	setLoginToken(state, data) {
 		state.isLogin = true;
 		state.isLoginError = false;
+		state.jwt = data;
+	},
+	setLoginImg(state, data) {
+		state.profileImg = data;
 	},
 	setUserInfo(state, data) {
 		state.userInfo = data;
@@ -120,6 +135,10 @@ const mutations = {
 		state.isLoginError = false;
 		state.userInfo = null;
 		localStorage.removeItem('user');
+	},
+	// 현재 사용자의 로그인상태(로그인인지 아닌지)
+	isLogined(state, data) {
+		state.isLogined = data;
 	},
 };
 

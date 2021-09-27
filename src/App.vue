@@ -25,13 +25,13 @@
 
 				<v-spacer></v-spacer>
 
-				<div v-if="loginflag">
-					<v-btn icon :to="{ name: 'Cart' }">
+				<div v-if="isLogin2">
+					<v-btn class="mr-1" icon :to="{ name: 'Cart' }" align-center>
 						<v-icon size="xx-large" color="white">mdi-cart</v-icon>
 					</v-btn>
 				</div>
 
-				<div v-if="!loginflag">
+				<div v-if="!isLogin2">
 					<v-menu bottom left>
 						<template v-slot:activator="{ on, attrs }">
 							<v-btn
@@ -58,6 +58,7 @@
 										style="font-size : medium; text-align : center"
 									>
 										로그인
+										<v-icon dense align-content-center>mdi-login</v-icon>
 									</v-list-item-title>
 								</v-list-item-content>
 							</v-list-item>
@@ -73,6 +74,7 @@
 										style="font-size : medium; text-align : center"
 									>
 										회원가입
+										<v-icon dense align-content-center>mdi-account-plus</v-icon>
 									</v-list-item-title>
 								</v-list-item-content>
 							</v-list-item>
@@ -89,8 +91,11 @@
 				<div v-else>
 					<v-menu bottom left>
 						<template v-slot:activator="{ on, attrs }">
-							<v-btn dark icon v-bind="attrs" v-on="on">
-								<v-icon size="xx-large" color="green">mdi-account-check</v-icon>
+							<v-btn dark icon v-bind="attrs" v-on="on" align-center>
+								<v-avatar size="45px">
+									<img v-bind:src="profileImg" />
+									<v-icon></v-icon>
+								</v-avatar>
 							</v-btn>
 						</template>
 						<v-list dense nav>
@@ -101,9 +106,11 @@
 							>
 								<v-list-item-content>
 									<v-list-item-title
+										align-center
 										style="font-size : medium; text-align : center"
-										>내 정보
-										<v-icon large color="white">mdi-information</v-icon>
+										>내 정보<v-icon dense align-content-center class="ml-1"
+											>mdi-information</v-icon
+										>
 									</v-list-item-title>
 								</v-list-item-content>
 							</v-list-item>
@@ -114,10 +121,12 @@
 							>
 								<v-list-item-content>
 									<v-list-item-title
+										align-center
 										@click="userLogout"
 										style="font-size : medium; text-align : center"
-										>로그아웃
-										<v-icon>mdi-logout</v-icon>
+										>로그아웃<v-icon dense align-content-center
+											>mdi-logout</v-icon
+										>
 									</v-list-item-title>
 								</v-list-item-content>
 							</v-list-item>
@@ -135,7 +144,7 @@
 				<span style="color : #00000099; font-size : medium">홈</span>
 				<v-icon large>mdi-home</v-icon>
 			</v-btn>
-			<div v-if="loginflag">
+			<div v-if="isLogin2">
 				<v-btn>
 					<span style="color : #00000099;  font-size : medium">채팅</span>
 					<v-icon large>mdi-chat</v-icon>
@@ -147,7 +156,7 @@
 				<v-icon large>mdi-shopping-search</v-icon>
 			</v-btn>
 
-			<div v-if="loginflag">
+			<div v-if="isLogin2">
 				<v-btn :to="{ name: 'Create' }">
 					<span style="color : #00000099; font-size : medium">중고거래</span>
 					<v-icon large color="blue">mdi-plus-circle-outline</v-icon>
@@ -186,26 +195,35 @@ window.kakaoAsyncInit = function() {
 	fjs.parentNode.insertBefore(js, fjs);
 })(document, 'script', 'kakao-js-sdk');
 
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
 	data: () => ({
 		overlay: false,
 		openMenu: false,
-		loginflag: false,
 	}),
-	mounted() {},
 
 	computed: {
+		// isLogin1() {
+		// 	return (this.profile = this.$store.state.auth.profileImg);
+		// },
+		isLogin2() {
+			return (
+				this.$store.state.auth.jwt != undefined ||
+				this.$store.state.auth.jwt == ''
+			);
+		},
 		...mapState({
-			isLogin: (state) => state.users.isLogin,
-			isLoginError: (state) => state.users.isLoginError,
+			isLoginError: (state) => state.auth.isLoginError,
+			profileImg: (state) => state.auth.profileImg,
 		}),
 	},
 	mounted() {
 		this.loginCheck();
 	},
 	methods: {
+		...mapMutations(['isLogined']),
+
 		loginCheck() {
 			if (!localStorage.getItem('user')) {
 				this.loginflag = false;

@@ -71,6 +71,7 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 export default {
+	//로그인에서 사용해야할 값 초기화(이메일, 비밀번호, 이메일 규칙, 비밀번호 규칙)
 	data: () => ({
 		valid: true,
 		email: '',
@@ -80,14 +81,21 @@ export default {
 		],
 		password: '',
 		passwordRules: [(v) => !!v || '비밀번호를 입력해주세요.'],
+		isLogined: false,
 	}),
+	//state:여러 컴포넌트 간에 공유할 데이터 : 상태
+	//getters ,computed : state 값에 접근하는 속성 미리 연산된 값을 접근하는 속성
+	// mutations : state 값을 변경할 수 있는 유일한 방법이자 메서드, commit으로 동작시킨다.
 	computed: {
 		...mapState({
 			isLogin: (state) => state.users.isLogin,
 			isLoginError: (state) => state.users.isLoginError,
+			// isLogined: (state) => state.users.isLogined,
 		}),
 	},
+
 	methods: {
+		// ...mapMutations(['isLogined']),
 		validate() {
 			this.$refs.form.validate();
 		},
@@ -107,14 +115,23 @@ export default {
 				alert('이메일이나 비밀번호를 입력해주세요.');
 				return;
 			}
-			this.postUserLogin(loginObj).then(() => {
-				this.$router.push(this.$route.query.redirect || '/');
-				this.isLoading = false;
+			//로그인 api 호출 시작 -> UserLogin.vue(this.postUserLogin) -> ...mapActions(PostUserLogin) -> auth.js/postUserLogin -> action안의 postUserLogin -> http 함수 호출 -> http 함수는 또 @/util\http/index.js 에 있음 -> http post 메소드를 requestBody와 requestheader 그리고 url과 함께 호출 -> return p 안에 response가 담기고 해당 데이터를 가공 -> 여러 유효성 검사 후 함수 콜백 -> 그리고 지금 .then() -> res를 같이 담아줘서 response값중
+
+			this.postUserLogin(loginObj).then((res) => {
+				console.log(res.token);
+
+				// this.isLogined = true;
+				// this.isLogined(this.isLogined);
+
+				this.$router.push({ name: 'Home' });
+				// this.$router.push(this.$route.query.redirect || '/');
+				// this.isLoading = false;
 			});
 		},
 
 		...mapActions({
 			postUserLogin: 'auth/postUserLogin',
+			// isLogined: 'auth/isLogined',
 		}),
 	},
 };
