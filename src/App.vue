@@ -25,13 +25,13 @@
 
 				<v-spacer></v-spacer>
 
-				<div v-if="isLogin2">
+				<div v-if="isLogin1">
 					<v-btn class="mr-1" icon :to="{ name: 'Cart' }" align-center>
 						<v-icon size="xx-large" color="white">mdi-cart</v-icon>
 					</v-btn>
 				</div>
 
-				<div v-if="!isLogin2">
+				<div v-if="!isLogin1">
 					<v-menu bottom left>
 						<template v-slot:activator="{ on, attrs }">
 							<v-btn
@@ -144,7 +144,7 @@
 				<span style="color : #00000099; font-size : medium">홈</span>
 				<v-icon large>mdi-home</v-icon>
 			</v-btn>
-			<div v-if="isLogin2">
+			<div v-if="isLogin1">
 				<v-btn>
 					<span style="color : #00000099;  font-size : medium">채팅</span>
 					<v-icon large>mdi-chat</v-icon>
@@ -156,7 +156,7 @@
 				<v-icon large>mdi-shopping-search</v-icon>
 			</v-btn>
 
-			<div v-if="isLogin2">
+			<div v-if="isLogin1">
 				<v-btn :to="{ name: 'Create' }">
 					<span style="color : #00000099; font-size : medium">중고거래</span>
 					<v-icon large color="blue">mdi-plus-circle-outline</v-icon>
@@ -179,21 +179,21 @@
 </template>
 
 <script>
-window.kakaoAsyncInit = function() {
-	Kakao.Channel.createAddChannelButton({
-		container: '#kakao-talk-channel-add-button',
-	});
-};
+// window.kakaoAsyncInit = function() {
+// 	Kakao.Channel.createAddChannelButton({
+// 		container: '#kakao-talk-channel-add-button',
+// 	});
+// };
 
-(function(d, s, id) {
-	var js,
-		fjs = d.getElementsByTagName(s)[0];
-	if (d.getElementById(id)) return;
-	js = d.createElement(s);
-	js.id = id;
-	js.src = 'https://developers.kakao.com/sdk/js/kakao.channel.min.js';
-	fjs.parentNode.insertBefore(js, fjs);
-})(document, 'script', 'kakao-js-sdk');
+// (function(d, s, id) {
+// 	var js,
+// 		fjs = d.getElementsByTagName(s)[0];
+// 	if (d.getElementById(id)) return;
+// 	js = d.createElement(s);
+// 	js.id = id;
+// 	js.src = 'https://developers.kakao.com/sdk/js/kakao.channel.min.js';
+// 	fjs.parentNode.insertBefore(js, fjs);
+// })(document, 'script', 'kakao-js-sdk');
 
 import { mapState, mapActions, mapMutations } from 'vuex';
 
@@ -203,34 +203,31 @@ export default {
 		openMenu: false,
 	}),
 
+	created: {},
 	computed: {
-		// isLogin1() {
-		// 	return (this.profile = this.$store.state.auth.profileImg);
-		// },
-		isLogin2() {
+		isLogin1() {
 			return (
 				this.$store.state.auth.jwt != undefined ||
 				this.$store.state.auth.jwt == ''
 			);
 		},
 		...mapState({
+			isLogin: (state) => state.auth.isLogin,
 			isLoginError: (state) => state.auth.isLoginError,
 			profileImg: (state) => state.auth.profileImg,
 		}),
 	},
 	mounted() {
-		this.loginCheck();
+		// this.loginCheck();
 	},
 	methods: {
-		...mapMutations(['isLogined']),
-
-		loginCheck() {
-			if (!localStorage.getItem('user')) {
-				this.loginflag = false;
-			} else {
-				this.loginflag = true;
-			}
-		},
+		// loginCheck() {
+		// 	if (!localStorage.getItem('user')) {
+		// 		this.loginflag = false;
+		// 	} else {
+		// 		this.loginflag = true;
+		// 	}
+		// },
 
 		userLogout() {
 			this.getUserLogout().then(() => {

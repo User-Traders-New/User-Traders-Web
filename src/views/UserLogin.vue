@@ -81,7 +81,6 @@ export default {
 		],
 		password: '',
 		passwordRules: [(v) => !!v || '비밀번호를 입력해주세요.'],
-		isLogined: false,
 	}),
 	//state:여러 컴포넌트 간에 공유할 데이터 : 상태
 	//getters ,computed : state 값에 접근하는 속성 미리 연산된 값을 접근하는 속성
@@ -90,12 +89,10 @@ export default {
 		...mapState({
 			isLogin: (state) => state.users.isLogin,
 			isLoginError: (state) => state.users.isLoginError,
-			// isLogined: (state) => state.users.isLogined,
 		}),
 	},
 
 	methods: {
-		// ...mapMutations(['isLogined']),
 		validate() {
 			this.$refs.form.validate();
 		},
@@ -119,10 +116,6 @@ export default {
 
 			this.postUserLogin(loginObj).then((res) => {
 				console.log(res.token);
-
-				// this.isLogined = true;
-				// this.isLogined(this.isLogined);
-
 				this.$router.push({ name: 'Home' });
 				// this.$router.push(this.$route.query.redirect || '/');
 				// this.isLoading = false;
@@ -131,7 +124,6 @@ export default {
 
 		...mapActions({
 			postUserLogin: 'auth/postUserLogin',
-			// isLogined: 'auth/isLogined',
 		}),
 	},
 };
