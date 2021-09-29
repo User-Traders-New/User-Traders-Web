@@ -116,14 +116,16 @@ export default {
 
 			this.postUserLogin(loginObj).then((res) => {
 				console.log(res.token);
-				this.$router.push({ name: 'Home' });
-				// this.$router.push(this.$route.query.redirect || '/');
+				// this.$router.push({ name: 'Home' });
+				this.$router.push(this.$route.query.redirect || '/');
 				// this.isLoading = false;
 			});
 		},
 
 		...mapActions({
+			getUserLogout: 'auth/getUserLogout',
 			postUserLogin: 'auth/postUserLogin',
+			getUserInfo: 'auth/getUserInfo',
 		}),
 	},
 };

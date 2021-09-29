@@ -225,7 +225,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import InfiniteLoading from 'vue-infinite-loading';
 import http from '@/utils/http';
 import Formatter from '@/mixin/Formatter';
@@ -244,7 +244,15 @@ export default {
 	components: {
 		InfiniteLoading,
 	},
-	computed: {},
+	computed: {
+		...mapState({
+			isLogin: (state) => state.auth.isLogin,
+			isLoginError: (state) => state.auth.isLoginError,
+			userInfo: (state) => state.auth.userInfo,
+			profileImg: (state) => state.auth.profileImg,
+			jwt: (state) => state.auth.jwt,
+		}),
+	},
 
 	mounted() {
 		this.init();

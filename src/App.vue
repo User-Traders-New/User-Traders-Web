@@ -25,13 +25,13 @@
 
 				<v-spacer></v-spacer>
 
-				<div v-if="isLogin1">
+				<div v-if="jwt">
 					<v-btn class="mr-1" icon :to="{ name: 'Cart' }" align-center>
 						<v-icon size="xx-large" color="white">mdi-cart</v-icon>
 					</v-btn>
 				</div>
 
-				<div v-if="!isLogin1">
+				<div v-if="!jwt">
 					<v-menu bottom left>
 						<template v-slot:activator="{ on, attrs }">
 							<v-btn
@@ -144,7 +144,7 @@
 				<span style="color : #00000099; font-size : medium">홈</span>
 				<v-icon large>mdi-home</v-icon>
 			</v-btn>
-			<div v-if="isLogin1">
+			<div v-if="jwt">
 				<v-btn>
 					<span style="color : #00000099;  font-size : medium">채팅</span>
 					<v-icon large>mdi-chat</v-icon>
@@ -156,7 +156,7 @@
 				<v-icon large>mdi-shopping-search</v-icon>
 			</v-btn>
 
-			<div v-if="isLogin1">
+			<div v-if="jwt">
 				<v-btn :to="{ name: 'Create' }">
 					<span style="color : #00000099; font-size : medium">중고거래</span>
 					<v-icon large color="blue">mdi-plus-circle-outline</v-icon>
@@ -195,7 +195,7 @@
 // 	fjs.parentNode.insertBefore(js, fjs);
 // })(document, 'script', 'kakao-js-sdk');
 
-import { mapState, mapActions, mapMutations } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
 	data: () => ({
@@ -203,19 +203,35 @@ export default {
 		openMenu: false,
 	}),
 
-	created: {},
 	computed: {
-		isLogin1() {
-			return (
-				this.$store.state.auth.jwt != undefined ||
-				this.$store.state.auth.jwt == ''
-			);
-		},
 		...mapState({
 			isLogin: (state) => state.auth.isLogin,
 			isLoginError: (state) => state.auth.isLoginError,
+			userInfo: (state) => state.auth.userInfo,
 			profileImg: (state) => state.auth.profileImg,
+			jwt: (state) => state.auth.jwt,
 		}),
+
+		// isLogin1() {
+		// 	this.$store.state.auth.jwt = localStorage.getItem('jwt');
+
+		// 	console.log('@@@@@');
+		// 	console.log(this.$store.state.auth.jwt);
+		// 	console.log(jwt);
+		// 	if (
+		// 		this.$store.state.auth.jwt == '' ||
+		// 		this.$store.state.auth.jwt == null ||
+		// 		this.$store.state.auth.jwt == undefined
+		// 	) {
+		// 		console.log('로그인상태는?' + this.$store.state.auth.isLogin);
+		// 		console.log(this.$store);
+		// 		return this.$store.state.auth.isLogin;
+		// 	} else {
+		// 		console.log('로그인상태는?' + this.$store.state.auth.isLogin);
+		// 		console.log(this.$store);
+		// 		return !this.$store.state.auth.isLogin;
+		// 	}
+		// },
 	},
 	mounted() {
 		// this.loginCheck();
@@ -228,17 +244,18 @@ export default {
 		// 		this.loginflag = true;
 		// 	}
 		// },
-
+		...mapActions({
+			getUserLogout: 'auth/getUserLogout',
+			getUserInfo: 'auth/getUserInfo',
+			postUserLogin: 'auth/postUserLogin',
+		}),
 		userLogout() {
 			this.getUserLogout().then(() => {
-				this.isLoading = false;
 				localStorage.removeItem('user');
+				localStorage.removeItem('jwt');
 				this.$router.push({ name: 'UserLogin' });
 			});
 		},
-		...mapActions({
-			getUserLogout: 'auth/getUserLogout',
-		}),
 	},
 };
 </script>

@@ -19,5 +19,9 @@ new Vue({
 	router,
 	store,
 	vuetify,
+	beforeCreate() {
+		// 진짜 모듈화 힘들었따.
+		this.$store.dispatch('auth/getUserInfo');
+	},
 	render: (h) => h(App),
 }).$mount('#app');
