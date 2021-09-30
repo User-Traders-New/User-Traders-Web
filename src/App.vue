@@ -211,46 +211,16 @@ export default {
 			profileImg: (state) => state.auth.profileImg,
 			jwt: (state) => state.auth.jwt,
 		}),
-
-		// isLogin1() {
-		// 	this.$store.state.auth.jwt = localStorage.getItem('jwt');
-
-		// 	console.log('@@@@@');
-		// 	console.log(this.$store.state.auth.jwt);
-		// 	console.log(jwt);
-		// 	if (
-		// 		this.$store.state.auth.jwt == '' ||
-		// 		this.$store.state.auth.jwt == null ||
-		// 		this.$store.state.auth.jwt == undefined
-		// 	) {
-		// 		console.log('로그인상태는?' + this.$store.state.auth.isLogin);
-		// 		console.log(this.$store);
-		// 		return this.$store.state.auth.isLogin;
-		// 	} else {
-		// 		console.log('로그인상태는?' + this.$store.state.auth.isLogin);
-		// 		console.log(this.$store);
-		// 		return !this.$store.state.auth.isLogin;
-		// 	}
-		// },
 	},
-	mounted() {
-		// this.loginCheck();
-	},
+	mounted() {},
 	methods: {
-		// loginCheck() {
-		// 	if (!localStorage.getItem('user')) {
-		// 		this.loginflag = false;
-		// 	} else {
-		// 		this.loginflag = true;
-		// 	}
-		// },
 		...mapActions({
 			getUserLogout: 'auth/getUserLogout',
-			getUserInfo: 'auth/getUserInfo',
 			postUserLogin: 'auth/postUserLogin',
 		}),
 		userLogout() {
-			this.getUserLogout().then(() => {
+			const jwt = localStorage.getItem('jwt');
+			this.getUserLogout(jwt).then(() => {
 				localStorage.removeItem('user');
 				localStorage.removeItem('jwt');
 				this.$router.push({ name: 'UserLogin' });

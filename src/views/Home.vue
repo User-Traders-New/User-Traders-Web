@@ -232,7 +232,7 @@ import Formatter from '@/mixin/Formatter';
 
 export default {
 	created() {
-		console.log('시작!');
+		console.log('게시물 불러오기 시작!');
 	},
 	mixins: [Formatter],
 	data() {

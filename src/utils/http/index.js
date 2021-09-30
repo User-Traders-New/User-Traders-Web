@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
 	baseURL: '/',
 	headers: { 'Cache-Control': 'no-cache' },
 });
-
+//url에 파라미터 붙여주기
 const _generateUrl = (url, params, headers = null) => {
 	if (params == null) {
 		return url;
@@ -68,6 +68,12 @@ const http = {
 						params: newParmas,
 						headers: header,
 					};
+					console.log('@@@@GET 요청시@@@@@');
+					console.log('파라미터 및 req json');
+					console.log(newParmas);
+					console.log('헤더');
+					console.log(header);
+					console.log('@@@@@GET 요청시@@@@22');
 					p = axiosInstance[method](newUrl, opt);
 				} else if (
 					method == 'post' ||
@@ -75,6 +81,14 @@ const http = {
 					method == 'patch' ||
 					method == 'delete'
 				) {
+					console.log('@@@@POST 요청시@@@@@');
+					console.log('url');
+					console.log(newUrl);
+					console.log('파라미터 및 req json');
+					console.log(newParmas);
+					console.log('헤더');
+					console.log(header);
+					console.log('@@@@@POST 요청시@@@@22');
 					p = axiosInstance[method](newUrl, newParmas, {
 						headers: header,
 					});

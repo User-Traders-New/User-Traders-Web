@@ -87,9 +87,9 @@ const actions = {
 			});
 	},
 	//로그아웃
-	getUserLogout({ commit }) {
+	getUserLogout({ commit }, jwt) {
 		return http
-			.process('user', 'logout')
+			.process('user', 'logout', null, { token: jwt })
 			.then((res) => {
 				console.log(res);
 				commit('logoutState');

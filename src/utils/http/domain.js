@@ -15,7 +15,7 @@ export default {
 		listdepartment: { task: 'get', url: '/departments/list' },
 		login: { task: 'post', url: '/users/login' },
 		signup: { task: 'post', url: '/users/signup' },
-		logout: { task: 'get', url: '/users/logout' },
+		logout: { task: 'post', url: '/users/logout' },
 		userInfo: { task: 'get', url: '/users/profile' },
 		userValid: { task: 'get', url: '/users/valid' },
 		categoryAll: { task: 'get', url: '/categories/list/board' },
