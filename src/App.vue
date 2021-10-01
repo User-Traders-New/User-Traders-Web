@@ -26,8 +26,18 @@
 				<v-spacer></v-spacer>
 
 				<div v-if="jwt">
-					<v-btn class="mr-1" icon :to="{ name: 'Cart' }" align-center>
-						<v-icon size="xx-large" color="white">mdi-cart</v-icon>
+					<v-btn
+						style="background-color:white"
+						class="mr-2"
+						icon
+						:to="{ name: 'Cart' }"
+						align-center
+					>
+						<v-avatar size="45px">
+							<v-icon size="xx-large" color="red">
+								mdi-heart
+							</v-icon>
+						</v-avatar>
 					</v-btn>
 				</div>
 

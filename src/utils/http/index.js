@@ -12,9 +12,6 @@ const axiosInstance = axios.create({
 const _generateUrl = (url, params, headers = null) => {
 	if (params == null) {
 		return url;
-	}
-	if (typeof params.id == Number) {
-		return url + '?' + params.id;
 	} else {
 		let result = [];
 		let list = url.split('/');
