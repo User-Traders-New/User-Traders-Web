@@ -4,6 +4,10 @@ let Formatter = {
 		// 	return require('@/assets/images/' + path);
 		// },
 		moneyFilter: function(value) {
+			console.log(value);
+			if (value == undefined) {
+				return undefined;
+			}
 			return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 		},
 		timeForToday: function(value) {

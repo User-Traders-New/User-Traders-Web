@@ -1,7 +1,14 @@
 import http from '@/utils/http';
 const state = {
 	listData: null,
-	listDataDeatail: {},
+	listDataDeatail: {
+		categoryId: {
+			subCategoryId: {},
+		},
+	},
+	listDataDeatailUserId: {},
+	boardParentComment: [],
+	board_cur_two: [],
 	detailImageurl: [],
 	totalPage: null,
 	page: 1,
@@ -69,6 +76,13 @@ const mutations = {
 		}
 		state.detailImageurl = arr;
 		state.listDataDeatail = data.boardResponseLoginDto;
+		state.boardParentComment = data.boardResponseLoginDto.boardParentComment;
+		state.listDataDeatailUserId = data.boardResponseLoginDto.userId;
+		for (var i = 0; i < 2; i++) {
+			state.board_cur_two = state.board_cur_two.concat(
+				data.boardResponseLoginDto.boardParentComment[i].userId
+			);
+		}
 	},
 	setCategories(state, data) {
 		state.categories = data;

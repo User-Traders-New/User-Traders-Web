@@ -1,9 +1,10 @@
 <template>
 	<div class="mt-16">
-		<loding v-if="isLoading" />
+		<!-- <loding v-if="isLoading" /> -->
 		<div v-if="listDataDeatail">
 			<v-row class="fill-height mt-5 mb-16" align="center" justify="center">
 				<v-card class="pa-2" tile flat>
+					<!-- 이미지 -->
 					<div>
 						<v-carousel progress-color="orange">
 							<v-carousel-item
@@ -17,21 +18,23 @@
 							></v-carousel-item>
 						</v-carousel>
 					</div>
+					<!-- 유저프로필,닉네임,판매중,물건상태 -->
 					<div
 						style="border-bottom:solid; border-width:0.5px; border-color: #cccccc;"
 					>
 						<v-card-text>
 							<div style="height: 56px; width: 100% ">
 								<div style="width: 50%; float: left; ">
-									<div>
+									<div style="display:flex; flex-direction:row">
 										<v-list-item-avatar>
 											<v-img
-												v-if="listDataDeatail.userId.imagePath"
-												v-bind:src="listDataDeatail.userId.imagePath"
+												v-if="listDataDeatailUserId"
+												v-bind:src="listDataDeatailUserId.imagePath"
 											></v-img>
 										</v-list-item-avatar>
-
-										{{ listDataDeatail.userId.nickName }}
+										<div v-if="listDataDeatailUserId.nickName">
+											{{ listDataDeatailUserId.nickName }}
+										</div>
 									</div>
 								</div>
 								<div
@@ -145,6 +148,7 @@
 							</div>
 						</v-card-text>
 					</div>
+					<!-- 제목,시간,카테고리,내용,가격 -->
 					<div
 						class="pb-5"
 						style="border-bottom:solid; border-width:0.5px; border-color: #cccccc;"
@@ -183,14 +187,13 @@
 							</v-card-text>
 						</v-card-text>
 					</div>
+					<!-- 댓글수,찜수,조회수,채팅수 -->
 					<div
 						style="border-bottom:solid; border-width:0.5px; border-color: #cccccc;"
 					>
 						<v-card-text class="mt-2 pa-3">
 							<div style="width: 100%;">
-								<div style="width: 20%; float: left">
-									댓글 더보기
-								</div>
+								<div style="width: 20%; float: left"></div>
 								<div style="margin-left: 20%; text-align: right">
 									<v-icon color="green">
 										mdi-comment-text-multiple
@@ -209,48 +212,50 @@
 									</v-icon>
 									{{ listDataDeatail.chatCount }}
 								</div>
+								<div class="ml-7" style="display:flex;flex-direction:row">
+									<v-form>
+										<v-text-field
+											autocomplete="off"
+											label="댓글"
+											prepend-icon="mdi-comment-text-multiple"
+											required
+										></v-text-field>
+									</v-form>
+									<v-card-actions>
+										<v-btn small style="" class="rounded-pill">보내기</v-btn>
+									</v-card-actions>
+								</div>
 							</div>
 						</v-card-text>
+					</div>
+					<!-- 댓글 -->
+					<div>
 						<v-card-text class="mt-2 pa-3">
 							<div style="display:flex ;  flex-direction:column">
 								<div style="display:flex ;  flex-direction:row;">
-									<div class="mr-2">
-										{{ listDataDeatail.boardParentComment[0].userId.nickName }}
+									<div v-if="boardParentComment[0]" class="mr-2">
+										{{ board_cur_two[0].nickName }}
 									</div>
-									<div>{{ listDataDeatail.boardParentComment[0].comment }}</div>
+									<div v-if="boardParentComment[0]">
+										{{ boardParentComment[0].comment }}
+									</div>
 								</div>
 
 								<div style="display:flex ;  flex-direction:row;">
-									<div class="mr-2">
-										{{ listDataDeatail.boardParentComment[1].userId.nickName }}
+									<div v-if="boardParentComment[1]" class="mr-2">
+										{{ board_cur_two[1].nickName }}
 									</div>
-									<div>{{ listDataDeatail.boardParentComment[1].comment }}</div>
+									<div v-if="boardParentComment[1]">
+										{{ boardParentComment[1].comment }}
+									</div>
 								</div>
 							</div>
 						</v-card-text>
 					</div>
-					<div class="ml-8">
-						<div style="display:flex;flex-direction:row">
-							<v-form>
-								<v-text-field
-									autocomplete="off"
-									label="댓글"
-									prepend-icon="mdi-comment-text-multiple"
-									required
-								></v-text-field>
-							</v-form>
-							<v-card-actions>
-								<v-btn small style="" class="rounded-pill">보내기</v-btn>
-							</v-card-actions>
-						</div>
-					</div>
+
 					<div>
 						<div class="ml-10">
-							<v-btn
-								color="#F0F0E6"
-								class="ma-2 orange--text pa-5"
-								@click="cartAdd(listDataDeatail.id)"
-							>
+							<v-btn color="#F0F0E6" class="ma-2 orange--text pa-5">
 								찜하기
 								<v-icon
 									v-if="listDataDeatail.likeWhether == 0"
@@ -267,11 +272,7 @@
 									mdi-heart
 								</v-icon>
 							</v-btn>
-							<v-btn
-								color="orange"
-								class="ma-2 white--text pa-5"
-								@click="messageSend"
-							>
+							<v-btn color="orange" class="ma-2 white--text pa-5">
 								채팅하기
 								<v-icon color="yellow" class="ml-2">
 									mdi-chat-processing
@@ -303,7 +304,7 @@ export default {
 		return {
 			isLoading: true,
 			token: '',
-			boardParentComment: [],
+			iscommented: false,
 		};
 	},
 
@@ -311,6 +312,9 @@ export default {
 		...mapState({
 			listDataDeatail: (state) => state.users.listDataDeatail,
 			detailImageurl: (state) => state.users.detailImageurl,
+			boardParentComment: (state) => state.users.boardParentComment,
+			listDataDeatailUserId: (state) => state.users.listDataDeatailUserId,
+			board_cur_two: (state) => state.users.board_cur_two,
 		}),
 	},
 	mounted() {
@@ -332,14 +336,18 @@ export default {
 				this.isLoading = false;
 			});
 		},
-		messageSend() {
-			this.$router.push({
-				name: 'MailWrite',
-				params: {
-					id: this.listDataDeatail.user.id,
-					email: this.listDataDeatail.user.username,
-				},
-			});
+		// messageSend() {
+		// 	this.$router.push({
+		// 		name: 'MailWrite',
+		// 		params: {
+		// 			id: this.listDataDeatail.user.id,
+		// 			email: this.listDataDeatail.user.username,
+		// 		},
+		// 	});
+		// },
+		clickedComment() {
+			this.iscommented = true;
+			alert('gg');
 		},
 		// cartAdd(id) {
 		// 	return http

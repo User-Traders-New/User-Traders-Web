@@ -171,7 +171,7 @@
 												class="font-weight-medium float-right "
 												style="font-size:large;"
 											>
-												{{ item.price | moneyFilter }} 원
+												{{ item.price || moneyFilter }} 원
 											</div>
 										</v-card-text>
 
@@ -288,9 +288,7 @@ export default {
 		detailPush(id) {
 			this.$router.push({ name: 'BoardDetail', params: { id: id } });
 		},
-		...mapActions({
-			_getList: 'users/getList',
-		}),
+		...mapActions({}),
 	},
 };
 </script>
