@@ -6,8 +6,8 @@ import './assets/scss/main.scss';
 import alert from './plugins/alert';
 import vuetify from './plugins/vuetify';
 import Vuetify from 'vuetify/lib';
-
 import Vuelidate from 'vuelidate';
+
 Vue.use(Vuelidate);
 
 Vue.use(Vuetify);
@@ -19,6 +19,7 @@ new Vue({
 	router,
 	store,
 	vuetify,
+
 	beforeCreate() {
 		if (localStorage.getItem('jwt')) {
 			this.$store.dispatch('auth/getUserInfo');

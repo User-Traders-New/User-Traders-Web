@@ -1,120 +1,309 @@
 <template>
-	<div>
+	<div class="mt-16">
 		<loding v-if="isLoading" />
 		<div v-if="listDataDeatail">
-			<v-row class="fill-height " align="center" justify="center">
+			<v-row class="fill-height mt-5 mb-16" align="center" justify="center">
 				<v-card class="pa-2" tile flat>
-					<v-carousel progress-color="orange">
-						<v-carousel-item
-							v-for="(item, i) in detailImageurl"
-							:key="i"
-							v-bind:src="item | loadImgOrPlaceholder"
-							width="344"
-							height="auto"
-							reverse-transition="fade-transition"
-							transition="fade-transition"
-						></v-carousel-item>
-					</v-carousel>
-
-					<div style="width: 100%;" v-if="listDataDeatail.status">
-						<h3 style="color :blue; text-align:right">판매중</h3>
+					<div>
+						<v-carousel progress-color="orange">
+							<v-carousel-item
+								v-for="(item, i) in detailImageurl"
+								:key="i"
+								v-bind:src="item"
+								width="344"
+								height="auto"
+								reverse-transition="fade-transition"
+								transition="fade-transition"
+							></v-carousel-item>
+						</v-carousel>
 					</div>
-					<div v-else>
-						<h3 style="color :red; text-align:right">판매완료</h3>
+					<div
+						style="border-bottom:solid; border-width:0.5px; border-color: #cccccc;"
+					>
+						<v-card-text>
+							<div style="height: 56px; width: 100% ">
+								<div style="width: 50%; float: left; ">
+									<div>
+										<v-list-item-avatar>
+											<v-img
+												v-if="listDataDeatail.userId.imagePath"
+												v-bind:src="listDataDeatail.userId.imagePath"
+											></v-img>
+										</v-list-item-avatar>
+
+										{{ listDataDeatail.userId.nickName }}
+									</div>
+								</div>
+								<div
+									v-if="listDataDeatail.status == 0"
+									class="light-blue--text"
+									style="margin-left: 50%; text-align: right;"
+									title="판매중"
+								>
+									{{ listDataDeatail.status | tradeStatus }}
+									<v-icon
+										v-if="listDataDeatail.grade == 0"
+										color="#ff0008"
+										title="새상품"
+									>
+										mdi-new-box
+									</v-icon>
+									<v-icon
+										v-if="listDataDeatail.grade == 1"
+										color="#fc0558"
+										title="S급"
+									>
+										mdi-alpha-s-box
+									</v-icon>
+									<v-icon
+										v-else-if="listDataDeatail.grade == 2"
+										color="#e39a07"
+										title="A급"
+									>
+										mdi-alpha-a-box
+									</v-icon>
+									<v-icon
+										v-else-if="listDataDeatail.grade == 3"
+										color="#a6a5a2"
+										title="B급"
+									>
+										mdi-alpha-b-box
+									</v-icon>
+								</div>
+								<div
+									v-else-if="listDataDeatail.status == 1"
+									class="orange--text"
+									style="margin-left: 50%; text-align: right;"
+									title=""
+								>
+									{{ listDataDeatail.status | tradeStatus }}
+									<v-icon
+										v-if="listDataDeatail.grade == 0"
+										color="#ff0008"
+										title="새상품"
+									>
+										mdi-new-box
+									</v-icon>
+									<v-icon
+										v-if="listDataDeatail.grade == 1"
+										color="#fc0558"
+										title="S급"
+									>
+										mdi-alpha-s-box
+									</v-icon>
+									<v-icon
+										v-else-if="listDataDeatail.grade == 2"
+										color="#e39a07"
+										title="A급"
+									>
+										mdi-alpha-a-box
+									</v-icon>
+									<v-icon
+										v-else-if="listDataDeatail.grade == 3"
+										color="#a6a5a2"
+										title="B급"
+									>
+										mdi-alpha-b-box
+									</v-icon>
+								</div>
+								<div
+									v-else-if="listDataDeatail.status == 2"
+									class="gray--text"
+									style="margin-left: 50%; text-align: right;"
+									title=""
+								>
+									{{ listDataDeatail.status | tradeStatus }}
+									<v-icon
+										v-if="listDataDeatail.grade == 0"
+										color="#ff0008"
+										title="새상품"
+									>
+										mdi-new-box
+									</v-icon>
+									<v-icon
+										v-if="listDataDeatail.grade == 1"
+										color="#fc0558"
+										title="S급"
+									>
+										mdi-alpha-s-box
+									</v-icon>
+									<v-icon
+										v-else-if="listDataDeatail.grade == 2"
+										color="#e39a07"
+										title="A급"
+									>
+										mdi-alpha-a-box
+									</v-icon>
+									<v-icon
+										v-else-if="listDataDeatail.grade == 3"
+										color="#a6a5a2"
+										title="B급"
+									>
+										mdi-alpha-b-box
+									</v-icon>
+								</div>
+							</div>
+						</v-card-text>
 					</div>
-
-					<div style="width: 100%; ">
-						<v-card-title>
-							<h4>{{ listDataDeatail.title }}</h4>
-						</v-card-title>
-					</div>
-
-					<v-card-subtitle style="clear:both">
-						{{ listDataDeatail.content }}
-					</v-card-subtitle>
-
-					<div style="width: 100%;">
-						<div style="width: 50%; float: left">
-							<v-card-text
-								>가격 : {{ listDataDeatail.price | moneyFilter }} won
+					<div
+						class="pb-5"
+						style="border-bottom:solid; border-width:0.5px; border-color: #cccccc;"
+					>
+						<v-card-text class="pa-1" style="position: relative;">
+							<v-card-text class="mt-2 pa-3">
+								<div
+									class="font-weight-medium"
+									style="font-size:xx-large; font-weight:bold"
+								>
+									{{ listDataDeatail.title }}
+								</div>
 							</v-card-text>
-						</div>
-						<div style="width: 50%; float: right; text-align: right">
 							<v-card-text>
-								<v-icon>
-									mdi-cart
-								</v-icon>
-								{{ listDataDeatail.cartcount }}
-								<v-icon>
+								<div>
+									{{ listDataDeatail.createAt | timeForToday }}
+									·
+									{{ listDataDeatail.categoryId.subCategoryId.name }}
+									·
+									{{ listDataDeatail.categoryId.name }}
+								</div>
+							</v-card-text>
+							<v-card-text class="mt-2 pa-3">
+								<div class="font-weight-medium" style="font-size:large;">
+									{{ listDataDeatail.content }}
+								</div>
+							</v-card-text>
+
+							<v-card-text class="pa-3">
+								<div
+									class="font-weight-medium float-right "
+									style="font-size:large;"
+								>
+									{{ listDataDeatail.price | moneyFilter }} 원
+								</div>
+							</v-card-text>
+						</v-card-text>
+					</div>
+					<div
+						style="border-bottom:solid; border-width:0.5px; border-color: #cccccc;"
+					>
+						<v-card-text class="mt-2 pa-3">
+							<div style="width: 100%;">
+								<div style="width: 20%; float: left">
+									댓글 더보기
+								</div>
+								<div style="margin-left: 20%; text-align: right">
+									<v-icon color="green">
+										mdi-comment-text-multiple
+									</v-icon>
+									{{ listDataDeatail.commentCount }}
+									<v-icon color="red">
+										mdi-heart
+									</v-icon>
+									{{ listDataDeatail.likeCount }}
+									<v-icon color="blue">
+										mdi-eye-outline
+									</v-icon>
+									{{ listDataDeatail.views }}
+									<v-icon color="yellow">
+										mdi-chat-processing
+									</v-icon>
+									{{ listDataDeatail.chatCount }}
+								</div>
+							</div>
+						</v-card-text>
+						<v-card-text class="mt-2 pa-3">
+							<div style="display:flex ;  flex-direction:column">
+								<div style="display:flex ;  flex-direction:row;">
+									<div class="mr-2">
+										{{ listDataDeatail.boardParentComment[0].userId.nickName }}
+									</div>
+									<div>{{ listDataDeatail.boardParentComment[0].comment }}</div>
+								</div>
+
+								<div style="display:flex ;  flex-direction:row;">
+									<div class="mr-2">
+										{{ listDataDeatail.boardParentComment[1].userId.nickName }}
+									</div>
+									<div>{{ listDataDeatail.boardParentComment[1].comment }}</div>
+								</div>
+							</div>
+						</v-card-text>
+					</div>
+					<div class="ml-8">
+						<div style="display:flex;flex-direction:row">
+							<v-form>
+								<v-text-field
+									autocomplete="off"
+									label="댓글"
+									prepend-icon="mdi-comment-text-multiple"
+									required
+								></v-text-field>
+							</v-form>
+							<v-card-actions>
+								<v-btn small style="" class="rounded-pill">보내기</v-btn>
+							</v-card-actions>
+						</div>
+					</div>
+					<div>
+						<div class="ml-10">
+							<v-btn
+								color="#F0F0E6"
+								class="ma-2 orange--text pa-5"
+								@click="cartAdd(listDataDeatail.id)"
+							>
+								찜하기
+								<v-icon
+									v-if="listDataDeatail.likeWhether == 0"
+									color="white"
+									class="ml-2"
+								>
 									mdi-heart
 								</v-icon>
-								{{ listDataDeatail.likecount }}
-								<v-icon>
-									mdi-eye-outline
+								<v-icon
+									v-if="listDataDeatail.likeWhether == 1"
+									color="red"
+									class="ml-2"
+								>
+									mdi-heart
 								</v-icon>
-								{{ listDataDeatail.viewcount }}
-							</v-card-text>
-						</div>
-					</div>
-
-					<div class="mt-15">
-						<v-btn
-							color="blue-grey"
-							class="ma-2 white--text"
-							@click="cartAdd(listDataDeatail.id)"
-						>
-							Add To Cart
-							<v-icon right dark>
-								mdi-cart
-							</v-icon>
-						</v-btn>
-						<v-btn
-							color="blue-grey"
-							class="ma-2 white--text"
-							@click="messageSend"
-						>
-							쪽지 보내기
-							<v-icon right dark>
+							</v-btn>
+							<v-btn
+								color="orange"
+								class="ma-2 white--text pa-5"
+								@click="messageSend"
+							>
+								채팅하기
+								<v-icon color="yellow" class="ml-2">
+									mdi-chat-processing
+								</v-icon>
+								<!-- <v-icon right dark>
 								mdi-arrow-right-bold
-							</v-icon>
-						</v-btn>
-						<v-btn
-							class="ma-2"
-							fab
-							dark
-							small
-							color="pink"
-							@click="likeAdd(listDataDeatail.id)"
-						>
-							<v-icon dark>
-								mdi-heart
-							</v-icon>
-						</v-btn>
+							</v-icon> -->
+							</v-btn>
+						</div>
 					</div>
 				</v-card>
 			</v-row>
-			<br />
-			<br />
-			<br />
 		</div>
 	</div>
 </template>
 <script>
 import { mapState, mapActions } from 'vuex';
-import Loding from './jun-loding.vue';
-import http from '@/utils/http';
+import Loading from './loding.vue';
 import Formatter from '@/mixin/Formatter';
+
 export default {
 	mixins: [Formatter],
 	props: ['id'],
 
 	components: {
-		Loding,
+		Loading,
 	},
 	data() {
 		return {
 			isLoading: true,
 			token: '',
+			boardParentComment: [],
 		};
 	},
 
@@ -134,7 +323,12 @@ export default {
 			this.token = localStorage.getItem('user');
 		},
 		getListDetail(id) {
-			this._getListDetail(id).then(() => {
+			let jwt = localStorage.getItem('jwt');
+			let payload = {
+				id: id,
+				jwt: jwt,
+			};
+			this._getListDetail(payload).then(() => {
 				this.isLoading = false;
 			});
 		},
@@ -147,40 +341,40 @@ export default {
 				},
 			});
 		},
-		cartAdd(id) {
-			return http
-				.process('cart', 'register', { boardId: id }, { token: this.token })
-				.then((res) => {
-					console.log(res);
-					this.$router.push({ name: 'Cart' });
-				})
-				.catch((err) => {
-					if (err.message === '로그인 되지 않았습니다. 로그인 해주세요.') {
-						alert(err.message);
-						this.$router.push(this.$route.query.redirect || '/user/login');
-					}
-					if (
-						err.message === '나의 게시물은 장바구니에 담을 수 없습니다.' ||
-						err.message === '중복된 게시물은 장바구니에 담을 수 없습니다.'
-					) {
-						alert(err.message);
-						this.$router.push(this.$route.query.redirect || '/detail/' + id);
-					}
-				});
-		},
-		likeAdd(id) {
-			return http
-				.process('like', 'register', { boardId: id }, { token: this.token })
-				.then((res) => {
-					console.log(res);
-					this.init();
-				})
-				.catch((err) => {
-					console.log(err);
-					alert('로그인 후 이용해 주세요');
-					this.$router.push({ name: 'UserLogin' });
-				});
-		},
+		// cartAdd(id) {
+		// 	return http
+		// 		.process('cart', 'register', { boardId: id }, { token: this.token })
+		// 		.then((res) => {
+		// 			console.log(res);
+		// 			this.$router.push({ name: 'Cart' });
+		// 		})
+		// 		.catch((err) => {
+		// 			if (err.message === '로그인 되지 않았습니다. 로그인 해주세요.') {
+		// 				alert(err.message);
+		// 				this.$router.push(this.$route.query.redirect || '/user/login');
+		// 			}
+		// 			if (
+		// 				err.message === '나의 게시물은 장바구니에 담을 수 없습니다.' ||
+		// 				err.message === '중복된 게시물은 장바구니에 담을 수 없습니다.'
+		// 			) {
+		// 				alert(err.message);
+		// 				this.$router.push(this.$route.query.redirect || '/detail/' + id);
+		// 			}
+		// 		});
+		// },
+		// likeAdd(id) {
+		// 	return http
+		// 		.process('like', 'register', { boardId: id }, { token: this.token })
+		// 		.then((res) => {
+		// 			console.log(res);
+		// 			this.init();
+		// 		})
+		// 		.catch((err) => {
+		// 			console.log(err);
+		// 			alert('로그인 후 이용해 주세요');
+		// 			this.$router.push({ name: 'UserLogin' });
+		// 		});
+		// },
 		...mapActions({
 			_getListDetail: 'users/getListDetail',
 		}),

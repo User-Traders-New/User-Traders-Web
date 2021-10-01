@@ -3,11 +3,13 @@ export default {
 		listAll: { task: 'get', url: '/boards/list/all' },
 		listPagenation: { task: 'get', url: '/boards/list/page' },
 
-		listdetail: { task: 'get', url: '/boards/list/#id' },
+		listdetail: { task: 'get', url: '/boards/list/detail' },
 		boardCreate: { task: 'post', url: '/boards/register' },
 		userBoard: { task: 'get', url: '/boards/list/user/board' },
 		categorySearch: { task: 'get', url: '/boards/category/search/#id' },
 		keywordSearch: { task: 'get', url: '/boards/keword/search' },
+		categoryAll: { task: 'get', url: '/boards/list/category' },
+		categorySub: { task: 'get', url: '/boards/list/category/sub' },
 	},
 	user: {
 		update: { task: 'patch', url: '/users/#id' },
@@ -18,7 +20,6 @@ export default {
 		logout: { task: 'post', url: '/users/logout' },
 		userInfo: { task: 'get', url: '/users/profile' },
 		userValid: { task: 'get', url: '/users/valid' },
-		categoryAll: { task: 'get', url: '/categories/list/board' },
 	},
 	like: {
 		register: { task: 'post', url: '/boards/likes/register' },

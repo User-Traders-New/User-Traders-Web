@@ -33,8 +33,7 @@
 											></div>
 										</v-expand-transition>
 									</v-img>
-
-									<v-card-text class="pa-1" style="position: relative;">
+									<div>
 										<v-card-text
 											style="border-bottom:solid; border-width:0.5px; border-color: #cccccc;"
 											><div style="height: 56px; width: 100% ">
@@ -157,6 +156,8 @@
 												</div>
 											</div>
 										</v-card-text>
+									</div>
+									<v-card-text class="pa-1" style="position: relative;">
 										<v-card-text class="mt-2 pa-3">
 											<div
 												class="font-weight-medium"
@@ -273,7 +274,7 @@ export default {
 							$state.complete();
 							/*alert("더 이상 목록이 존재하지 않습니다.")*/
 						}
-					}, 500);
+					}, 1000);
 				})
 				.catch((err) => {
 					console.log(err);

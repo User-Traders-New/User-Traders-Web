@@ -1,12 +1,13 @@
 import http from '@/utils/http';
 const state = {
 	listData: null,
-	listDataDeatail: null,
+	listDataDeatail: {},
 	detailImageurl: [],
 	totalPage: null,
 	page: 1,
 	newlistData: null,
 	categories: [],
+	subcategories: [],
 };
 
 const getters = {};
@@ -22,15 +23,33 @@ const actions = {
 			});
 	},
 	getListDetail({ commit }, payload) {
-		return http.process('user', 'listdetail', { id: payload }).then((data) => {
-			commit('setListDataDetail', data);
-		});
+		return http
+			.process(
+				'boards',
+				'listdetail',
+				{ id: payload.id },
+				{ token: payload.jwt }
+			)
+			.then((data) => {
+				commit('setListDataDetail', data);
+			});
 	},
 	getCategories({ commit }) {
 		return http
-			.process('user', 'categoryAll')
+			.process('boards', 'categoryAll')
 			.then((data) => {
 				commit('setCategories', data);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	},
+
+	getSubCategories({ commit }, payload) {
+		return http
+			.process('boards', 'categorySub', { subCategoryId: payload })
+			.then((data) => {
+				commit('setSubCategories', data);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -44,14 +63,18 @@ const mutations = {
 	},
 	setListDataDetail(state, data) {
 		const arr = [];
-		arr.push(data.imageurl1);
-		arr.push(data.imageurl2);
-		arr.push(data.imageurl3);
+
+		for (var i = 0; i < data.boardImageDto.length; i++) {
+			arr.push(data.boardImageDto[i].path);
+		}
 		state.detailImageurl = arr;
-		state.listDataDeatail = data;
+		state.listDataDeatail = data.boardResponseLoginDto;
 	},
 	setCategories(state, data) {
 		state.categories = data;
+	},
+	setSubCategories(state, data) {
+		state.subcategories = data;
 	},
 };
 

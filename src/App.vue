@@ -8,11 +8,11 @@
 				class="fixed-bar "
 				fixed
 			>
-				<v-toolbar-title>
+				<!-- <v-toolbar-title>
 					<v-btn icon @click="$router.go(-1)">
 						<v-icon size="xx-large" color="white">mdi-arrow-left</v-icon>
 					</v-btn>
-				</v-toolbar-title>
+				</v-toolbar-title> -->
 
 				<v-toolbar-title class="ma-2">
 					<a
@@ -151,18 +151,16 @@
 				</v-btn>
 			</div>
 
-			<v-btn :to="{ name: 'Search' }">
-				<span style="color : #00000099; font-size : medium">검색</span>
-				<v-icon large>mdi-shopping-search</v-icon>
-			</v-btn>
-
 			<div v-if="jwt">
 				<v-btn :to="{ name: 'Create' }">
 					<span style="color : #00000099; font-size : medium">중고거래</span>
 					<v-icon large color="blue">mdi-plus-circle-outline</v-icon>
 				</v-btn>
 			</div>
-
+			<v-btn :to="{ name: 'Search' }">
+				<span style="color : #00000099; font-size : medium">검색</span>
+				<v-icon large>mdi-shopping-search</v-icon>
+			</v-btn>
 			<!-- <div v-if="loginflag">
 				<v-btn @click="overlay = !overlay">
 					<span style="color : #00000099; font-size : medium">카카오톡</span>
