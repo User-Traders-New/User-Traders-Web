@@ -23,9 +23,7 @@ const actions = {
 						alert('로그인에 실패하였습니다.');
 						dispatch('getUserLogout');
 					}
-					// let profileImg = res.user.imagePath;
-					// commit('setLoginToken', token);
-					// commit('setLoginImg', profileImg);
+
 					localStorage.setItem('jwt', token);
 
 					commit('isLoginedSuccess2', token);
@@ -34,14 +32,13 @@ const actions = {
 					console.log('가입 되지 않은 email 입니다.');
 					alert('가입 되지 않은 email 입니다.');
 					commit('logoutState');
-					// return router.push({ name: 'UserLogin' }).catch(() => {});
-					// return this.$router.push(this.$route.query.redirect || '/user/login');
+
+					return;
 				} else if (res.payload.message == '비밀번호를 잘못 입력 하셨습니다.') {
 					console.log('비밀번호를 잘못 입력 하셨습니다.');
 					alert('비밀번호를 잘못 입력 하셨습니다.');
 					commit('logoutState');
-					// return router.push({ name: 'UserLogin' }).catch(() => {});
-					// return this.$router.push(this.$route.query.redirect || '/user/login');
+					return;
 				}
 				return res;
 			})
@@ -55,8 +52,7 @@ const actions = {
 				) {
 					alert(err.message);
 					commit('logoutState');
-					// return router.push({ name: 'UserLogin' }).catch(() => {});
-					// return this.$router.push(this.$route.query.redirect || '/user/login');
+					return;
 				}
 			});
 	},
@@ -123,32 +119,24 @@ const actions = {
 };
 
 const mutations = {
-	// //로그인 성공후 프로필 이미지
-	// setLoginImg(state, data) {
-	// 	state.profileImg = data;
-	// },
-
-	setUserInfo(state, data) {
-		state.userInfo = data;
-	},
-	//로그인 성공 1
+	//로그인 성공 후  회원 정보 state 에 저장.
 	isLoginedSuccess(state, data) {
 		state.userInfo = data;
 		state.profileImg = data.imagePath;
-	}, //로그인 성공 2
+	}, //로그인 성공 후 jwt 토큰과 성공 여부 state에 저장
 	isLoginedSuccess2(state, data) {
 		state.isLogin = true;
 		state.isLoginError = false;
 		state.jwt = data;
 	},
 
-	//로그인 실패
+	//로그인 실패 후 jwt 토큰 삭제와 실패 여부 state에 저장
 	isLoginedError(state) {
 		state.isLogin = false;
 		state.isLoginError = true;
 		state.jwt = '';
 	},
-	//로그아웃 처리 상태값 변환
+	//로그아웃 처리 후 상태값 변환
 	logoutState(state) {
 		localStorage.removeItem('jwt');
 		localStorage.removeItem('user');

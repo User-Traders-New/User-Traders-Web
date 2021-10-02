@@ -21,12 +21,21 @@
 				</div>
 				<div style="display:flex; flex-direction:column">
 					<v-btn icon @click="categorySearch">
-						<v-icon color="green">mdi-shopping</v-icon>
+						<v-icon v-if="iswhat == 1" color="green">mdi-shopping</v-icon>
+						<v-icon v-if="iswhat == 0" color="">mdi-shopping</v-icon>
 					</v-btn>
 					<span style="font-size:10px; text-align : center">카테고리</span>
 				</div>
 			</v-toolbar>
 		</div>
+		<!-- 서브 카테고리 오버레이 -->
+		<v-overlay class="mt-16 mb-16" :absolute="absolute" :value="overlay">
+			<v-col v-for="(item, i) in listCategory" :key="`item-${i}`" cols="auto">
+				<v-btn color="orange" @click="searchCategory2(item.id)"
+					>{{ item.name }}
+				</v-btn>
+			</v-col>
+		</v-overlay>
 		<!-- 카테고리 -->
 		<div v-if="iswhat == 1" class="" style="text-align:center;">
 			<v-card class="d-flex justify-space-around mb-6" flat>
@@ -54,7 +63,7 @@
 					<v-btn color="white" fab x-large dark @click="searchCategory(4)">
 						<v-icon color="#D500F9">mdi-television-classic</v-icon>
 					</v-btn>
-					<v-card-text>가전용품</v-card-text>
+					<v-card-text>가전제품</v-card-text>
 				</v-card>
 				<v-card class="pa-2" tile flat>
 					<v-btn color="white" fab x-large dark @click="searchCategory(5)">
@@ -66,7 +75,7 @@
 					<v-btn color="white" fab x-large dark @click="searchCategory(6)">
 						<v-icon color="#78909C">mdi-storefront-outline</v-icon>
 					</v-btn>
-					<v-card-text>잡화</v-card-text>
+					<v-card-text>주방</v-card-text>
 				</v-card>
 			</v-card>
 			<v-card class="d-flex justify-space-around mb-6" flat>
@@ -74,7 +83,7 @@
 					<v-btn color="white" fab x-large dark @click="searchCategory(7)">
 						<v-icon color="#1E88E5">mdi-gamepad-variant</v-icon>
 					</v-btn>
-					<v-card-text>취미</v-card-text>
+					<v-card-text>취미/티켓</v-card-text>
 				</v-card>
 				<v-card class="pa-2" tile flat>
 					<v-btn color="white" fab x-large dark @click="searchCategory(8)">
@@ -86,21 +95,33 @@
 					<v-btn color="white" fab x-large dark @click="searchCategory(9)">
 						<v-icon color="#D32F2F">mdi-lipstick</v-icon>
 					</v-btn>
-					<v-card-text>뷰티</v-card-text>
+					<v-card-text>뷰티/미용</v-card-text>
 				</v-card>
 			</v-card>
 		</div>
 		<!-- 검색결과 -->
 		<div>
-			<h2 v-if="isSearch" style="text-align: center">
-				<span style="color: cornflowerblue ;font-weight: bold">{{
-					searchKeyword
-				}}</span>
-				에 대한 검색 결과
-				<span style="color: cornflowerblue ;font-weight: bold"
-					>{{ listData.length }}
-				</span>
-				건
+			<div v-if="listData">
+				<h2 v-if="isSearch" style="text-align: center">
+					<span style="color: cornflowerblue ;font-weight: bold">{{
+						searchKeyword
+					}}</span>
+					에 대한 검색 결과
+					<span style="color: cornflowerblue ;font-weight: bold"
+						>{{ listData.length }}
+					</span>
+					건
+				</h2>
+			</div>
+			<h2 v-if="listData == null">
+				<h2 style="text-align: center">
+					<span style="color: cornflowerblue ;font-weight: bold"
+						>해당 카테고리</span
+					>
+					에 대한 검색 결과
+					<span style="color: cornflowerblue ;font-weight: bold">0</span>
+					건
+				</h2>
 			</h2>
 			<v-container v-if="listData" three-line>
 				<v-row class="">
@@ -317,7 +338,7 @@
 				</v-row>
 			</v-container>
 		</div>
-		<!-- </v-card> -->
+
 		<br />
 		<br />
 		<br />
@@ -333,11 +354,15 @@ export default {
 		return {
 			isLoading: false,
 			listData: [],
+			listCategory: [],
 			searchKeyword: '',
-			searchKeywordcate: '',
 			keyword: '',
 			iswhat: 0,
 			isSearch: false,
+			subCategoryId: 0,
+			catagoryId: 0,
+			absolute: true,
+			overlay: false,
 		};
 	},
 	computed: {},
@@ -346,12 +371,42 @@ export default {
 			this.$router.push({ name: 'BoardDetail', params: { id: id } });
 		},
 		searchCategory(id) {
+			this.subCategoryId = id;
+			this.overlay = true;
 			return http
-				.process('boards', 'categorySearch', { id: id })
+				.process('boards', 'categorySub', {
+					subCategoryId: this.subCategoryId,
+				})
+				.then((res) => {
+					console.log(res.boardCategoryDtoList);
+					this.listCategory = res.boardCategoryDtoList;
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		},
+		searchCategory2(id) {
+			this.overlay = false;
+			this.iswhat = 0;
+			return http
+				.process('boards', 'categorySearch', {
+					categoryId: id,
+					subCategoryId: this.subCategoryId,
+				})
 				.then((res) => {
 					console.log(res);
-					this.listData = res;
-					this.searchKeyword = '해당 카테고리 검색';
+					if (res.boardResponseDtoList.length == 0) {
+						this.listData = null;
+					} else {
+						this.listData = res.boardResponseDtoList;
+
+						this.searchKeyword = '해당 카테고리';
+						// res.boardResponseDtoList[0].catagoryId.subCategoryId.name +
+						// ' > ' +
+						// res.boardResponseDtoList[0].catagoryId.name +
+						// '카테고리';
+						this.isSearch = true;
+					}
 				})
 				.catch((err) => {
 					console.log(err);

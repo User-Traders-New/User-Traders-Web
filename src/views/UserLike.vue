@@ -7,21 +7,21 @@
 				<v-icon size="xxx-large" color="orange">mdi-gift</v-icon>
 			</h1>
 			<v-card v-for="(cart, index) in cartList" :key="cart.id">
-				<div @click="detailPush(cart.board.id)">
+				<div @click="detailPush(cart.boardId.id)">
 					<v-layout>
 						<v-flex xs3>
-							<v-img
-								v-bind:src="cart.board.imageurl1 | loadImgOrPlaceholder"
+							<!-- <v-img
+								v-bind:src="cart.boardId.imageurl1 "
 								contain
 								height="125px"
-							></v-img>
+							></v-img> -->
 						</v-flex>
 						<v-layout column>
 							<v-card-title>
-								<h4>{{ cart.board.title }}</h4>
+								<h4>{{ cart.boardId.title }}</h4>
 							</v-card-title>
 							<v-card-text>{{
-								`가격 : ${cart.board.price} 원 ` | moneyFilter
+								`가격 : ${cart.boardId.price} 원 ` | moneyFilter
 							}}</v-card-text>
 						</v-layout>
 						<v-card-actions>
@@ -66,45 +66,69 @@ export default {
 		};
 	},
 	mounted() {
-		const token = localStorage.getItem('user');
-		if (!localStorage.getItem('user')) {
-			this.$router.push({ name: 'UserLogin' });
-		} else if (!userTokenValid(token)) {
-			alert('토큰이 만료되었습니다. 다시 로그인 해주세요!!');
-			this.$router.push({ name: 'UserLogin' });
-		}
-		this.getCartList(token);
+		this.init();
 	},
 	methods: {
-		getCartList(token) {
+		init() {
+			if (!localStorage.getItem('jwt')) {
+				this.getUserLogout().then(() => {
+					this.isLoading = false;
+				});
+			} else {
+				const jwt = localStorage.getItem('jwt');
+				this.getCartList(jwt);
+			}
+			// } else if (!userTokenValid(token)) {
+			// 	alert('토큰이 만료되었습니다. 다시 로그인 해주세요!!');
+			// 	this.$router.push({ name: 'UserLogin' });
+			// }
+		},
+		getCartList(jwt) {
 			return http
-				.process('cart', 'list', null, { token: token })
+				.process('boards', 'listlike', null, { token: jwt })
 				.then((res) => {
-					this.cartList = res;
+					this.cartList = res.boardLikeUserDtoList;
 				})
 				.catch((err) => {
 					console.log(err.message);
 					alert(err.message);
 					this.getUserLogout().then(() => {
 						this.isLoading = false;
-						localStorage.removeItem('user');
-						this.$router.push({ name: 'Home' });
 					});
-					this.$router.push(this.$route.query.redirect || '/user/login');
 				});
 		},
 		...mapActions({
 			getUserLogout: 'auth/getUserLogout',
 		}),
-		cartDelete(idx, id) {
+		// cartDelete(idx, id) {
+		// 	this.cartList.splice(idx, 1);
+		// 	return http
+		// 		.process('boards', 'like', { id: id })
+		// 		.then((res) => {
+		// 			console.log(res);
+		// 		})
+		// 		.catch((err) => {
+		// 			console.log(err);
+		// 		});
+		// },
+
+		likeAddDelete(idx, id) {
 			this.cartList.splice(idx, 1);
 			return http
-				.process('cart', 'remove', { id: id })
+				.process(
+					'boards',
+					'like',
+					{ boardId: { id: id } },
+					{ token: this.token }
+				)
 				.then((res) => {
 					console.log(res);
+					this.init();
 				})
 				.catch((err) => {
 					console.log(err);
+					alert('로그인 후 이용해 주세요');
+					this.$router.push({ name: 'UserLogin' });
 				});
 		},
 		detailPush(id) {

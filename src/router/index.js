@@ -9,7 +9,7 @@ const BoardDetail = () => import('../views/BoardDetail.vue');
 const UserLogin = () => import('../views/UserLogin.vue');
 const SignUp = () => import('../views/SignUp.vue');
 const Profile = () => import('../views/Profile.vue');
-const Cart = () => import('../views/Cart.vue');
+const UserLike = () => import('../views/UserLike.vue');
 const Search = () => import('../views/Search.vue');
 const Empty = () => import('../components/empty/empty.vue');
 const routes = [
@@ -58,9 +58,9 @@ const routes = [
 				component: Profile,
 			},
 			{
-				path: 'cart',
-				name: 'Cart',
-				component: Cart,
+				path: 'userLike',
+				name: 'UserLike',
+				component: UserLike,
 			},
 		],
 	},

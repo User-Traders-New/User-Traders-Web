@@ -255,7 +255,11 @@
 
 					<div>
 						<div class="ml-10">
-							<v-btn color="#F0F0E6" class="ma-2 orange--text pa-5">
+							<v-btn
+								@click="likeAddDelete(listDataDeatail.id)"
+								color="#F0F0E6"
+								class="ma-2 orange--text pa-5"
+							>
 								찜하기
 								<v-icon
 									v-if="listDataDeatail.likeWhether == 0"
@@ -290,6 +294,7 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex';
+import http from '@/utils/http';
 import Loading from './loding.vue';
 import Formatter from '@/mixin/Formatter';
 
@@ -324,7 +329,7 @@ export default {
 		init() {
 			console.log('detail init...');
 			this.getListDetail(this.id);
-			this.token = localStorage.getItem('user');
+			this.token = localStorage.getItem('jwt');
 		},
 		getListDetail(id) {
 			let jwt = localStorage.getItem('jwt');
@@ -370,21 +375,27 @@ export default {
 		// 			}
 		// 		});
 		// },
-		// likeAdd(id) {
-		// 	return http
-		// 		.process('like', 'register', { boardId: id }, { token: this.token })
-		// 		.then((res) => {
-		// 			console.log(res);
-		// 			this.init();
-		// 		})
-		// 		.catch((err) => {
-		// 			console.log(err);
-		// 			alert('로그인 후 이용해 주세요');
-		// 			this.$router.push({ name: 'UserLogin' });
-		// 		});
-		// },
+		likeAddDelete(id) {
+			return http
+				.process(
+					'boards',
+					'like',
+					{ boardId: { id: id } },
+					{ token: this.token }
+				)
+				.then((res) => {
+					console.log(res);
+					this.init();
+				})
+				.catch((err) => {
+					console.log(err);
+					alert('로그인 후 이용해 주세요');
+					this.$router.push({ name: 'UserLogin' });
+				});
+		},
 		...mapActions({
 			_getListDetail: 'users/getListDetail',
+			getUserLogout: 'auth/getUserLogout',
 		}),
 	},
 };

@@ -30,7 +30,7 @@
 						style="background-color:white"
 						class="mr-2"
 						icon
-						:to="{ name: 'Cart' }"
+						:to="{ name: 'UserLike' }"
 						align-center
 					>
 						<v-avatar size="45px">
