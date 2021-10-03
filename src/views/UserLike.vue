@@ -1,45 +1,52 @@
 <template>
 	<v-container>
 		<v-card>
-			<h1 align="center" class="dark--text">
-				<v-icon size="xxx-large" color="orange">mdi-gift</v-icon>
-				나의 장바구니 현황
-				<v-icon size="xxx-large" color="orange">mdi-gift</v-icon>
+			<h1 align="center" class="dark--text mb-2">
+				<v-icon size="xx-large" color="#ff7700">mdi-gift</v-icon>
+				<span class="font-36"> 나의 찜 현황 </span>
+				<v-icon size="xx-large" color="#ff7700">mdi-gift</v-icon>
 			</h1>
-			<v-card v-for="(cart, index) in cartList" :key="cart.id">
+
+			<v-card
+				style="display:flex; flex-direction:row; justify-content: center; align-items: center;"
+				v-for="(cart, index) in cartList"
+				:key="cart.id"
+			>
 				<div @click="detailPush(cart.boardId.id)">
-					<v-layout>
+					<v-layout width="">
 						<v-flex xs3>
-							<!-- <v-img
-								v-bind:src="cart.boardId.imageurl1 "
+							<v-img
+								v-bind:src="cart.boardImageDto.path"
 								contain
-								height="125px"
-							></v-img> -->
+								height="130px"
+								width="130px"
+							></v-img>
 						</v-flex>
 						<v-layout column>
 							<v-card-title>
 								<h4>{{ cart.boardId.title }}</h4>
 							</v-card-title>
-							<v-card-text>{{
-								`가격 : ${cart.boardId.price} 원 ` | moneyFilter
-							}}</v-card-text>
-						</v-layout>
-						<v-card-actions>
-							<v-btn
-								right
-								color="blue-grey"
-								class="ma-2 white--text"
-								fab
-								@click="cartDelete(index, cart.id)"
+							<v-card-text
+								>{{ cart.boardId.price | moneyFilter }} 원</v-card-text
 							>
-								<v-icon dark>
-									mdi-delete
-								</v-icon>
-							</v-btn>
-						</v-card-actions>
+						</v-layout>
 					</v-layout>
 				</div>
+				<v-card-actions>
+					<v-btn
+						right
+						color="blue-grey"
+						class="ma-2 white--text"
+						fab
+						@click="likeAddDelete(index, cart.boardId.id)"
+					>
+						<v-icon dark>
+							mdi-delete
+						</v-icon>
+					</v-btn>
+				</v-card-actions>
 			</v-card>
+
 			<v-card-subtitle>
 				<h3 align="center">
 					개수 :
@@ -114,21 +121,15 @@ export default {
 
 		likeAddDelete(idx, id) {
 			this.cartList.splice(idx, 1);
+			const jwt = localStorage.getItem('jwt');
 			return http
-				.process(
-					'boards',
-					'like',
-					{ boardId: { id: id } },
-					{ token: this.token }
-				)
+				.process('boards', 'like', { boardId: { id: id } }, { token: jwt })
 				.then((res) => {
 					console.log(res);
 					this.init();
 				})
 				.catch((err) => {
 					console.log(err);
-					alert('로그인 후 이용해 주세요');
-					this.$router.push({ name: 'UserLogin' });
 				});
 		},
 		detailPush(id) {
@@ -140,7 +141,7 @@ export default {
 		total() {
 			let total = 0;
 			this.cartList.forEach((cartItem) => {
-				total += parseInt(cartItem.board.price);
+				total += parseInt(cartItem.boardId.price);
 			});
 			return total;
 		},

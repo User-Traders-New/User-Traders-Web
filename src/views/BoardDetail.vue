@@ -385,6 +385,20 @@ export default {
 				)
 				.then((res) => {
 					console.log(res);
+					console.log(res.message);
+					if (
+						res.message !=
+						'19번 게시물을 장바구니에 담기 취소에 성공하였습니다.'
+					) {
+						if (
+							confirm(
+								'해당 게시물을 찜 하였습니다. 장바구니로 이동하시겠습니까?'
+							)
+						) {
+							this.$router.push({ name: 'UserLike' });
+						}
+					}
+
 					this.init();
 				})
 				.catch((err) => {

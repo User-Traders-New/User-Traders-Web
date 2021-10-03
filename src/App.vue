@@ -157,7 +157,7 @@
 			<div v-if="jwt">
 				<v-btn>
 					<span style="color : #00000099;  font-size : medium">채팅</span>
-					<v-icon large>mdi-chat</v-icon>
+					<v-icon large color="yellow">mdi-chat</v-icon>
 				</v-btn>
 			</div>
 
@@ -169,7 +169,7 @@
 			</div>
 			<v-btn :to="{ name: 'Search' }">
 				<span style="color : #00000099; font-size : medium">검색</span>
-				<v-icon large>mdi-shopping-search</v-icon>
+				<v-icon large color="green">mdi-shopping-search</v-icon>
 			</v-btn>
 			<!-- <div v-if="loginflag">
 				<v-btn @click="overlay = !overlay">

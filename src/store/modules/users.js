@@ -45,7 +45,7 @@ const actions = {
 		return http
 			.process('boards', 'categoryAll')
 			.then((data) => {
-				commit('setCategories', data);
+				commit('setCategories', data.boardSubCategoryDtoList);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -56,7 +56,7 @@ const actions = {
 		return http
 			.process('boards', 'categorySub', { subCategoryId: payload })
 			.then((data) => {
-				commit('setSubCategories', data);
+				commit('setSubCategories', data.boardCategoryDtoList);
 			})
 			.catch((err) => {
 				console.log(err);
