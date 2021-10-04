@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<v-container>
-			<v-row justify="center" class="mt-13">
+			<v-row justify="center" class="mt-16">
 				<v-expansion-panels popout>
 					<v-expansion-panel
 						v-for="(message, i) in messages"
@@ -16,17 +16,17 @@
 											<img
 												v-if="message.avatar"
 												alt="Avatar"
-												src="https://avatars.githubusercontent.com/u/43032589?v=4"
+												v-bind:src="userInfo.imagePath"
 											/>
-											<v-icon
+											<!-- <v-icon
 												v-else
 												:color="message.color"
 												v-text="message.icon"
-											></v-icon>
+											></v-icon> -->
 										</v-avatar>
 									</v-col>
 									<v-col class="text-no-wrap" cols="5" sm="3">
-										<v-chip
+										<!-- <v-chip
 											v-if="message.new"
 											:color="`${message.color} lighten-4`"
 											class="ml-0 mr-2 black--text"
@@ -34,7 +34,7 @@
 											small
 										>
 											{{ message.new }} new
-										</v-chip>
+										</v-chip> -->
 										<strong>내 정보</strong>
 									</v-col>
 								</v-row>
@@ -45,22 +45,29 @@
 									<v-list-item three-line>
 										<v-list-item-content>
 											<div class="overline mb-4">
-												email : {{ userInfo.userid }}
+												email : {{ userInfo.email }}
 											</div>
 											<div class="overline mb-4">
-												이름 : {{ userInfo.name }}
+												닉네임 : {{ userInfo.nickname }}
 											</div>
 											<div class="overline mb-4">
-												가입일 : {{ userInfo.createdDate }}
+												이름 : {{ userInfo.userNamed }}
 											</div>
-											<div class="overline mb-4">학과 : {{ department }}</div>
+											<div class="overline mb-4">
+												가입일 : {{ userInfo.createAt }}
+											</div>
 											<div class="overline mb-4">TEL : {{ userInfo.tel }}</div>
+											<div class="overline mb-4">학과 : {{ department }}</div>
+											<div class="overline mb-4">성별 : {{ gender }}</div>
 										</v-list-item-content>
 									</v-list-item>
 
 									<v-card-actions>
 										<v-btn outlined rounded text>
 											회원정보 수정
+										</v-btn>
+										<v-btn outlined rounded text>
+											회원 탈퇴
 										</v-btn>
 									</v-card-actions>
 								</v-row>
@@ -85,17 +92,17 @@
 											<img
 												v-if="message.avatar"
 												alt="Avatar"
-												src="https://avatars.githubusercontent.com/u/43032589?v=4"
+												v-bind:src="userInfo.imagePath"
 											/>
-											<v-icon
+											<!-- <v-icon
 												v-else
 												:color="message.color"
 												v-text="message.icon"
-											></v-icon>
+											></v-icon> -->
 										</v-avatar>
 									</v-col>
 									<v-col class="text-no-wrap" cols="5" sm="3">
-										<v-chip
+										<!-- <v-chip
 											v-if="message.new"
 											:color="`${message.color} lighten-4`"
 											class="ml-0 mr-2 black--text"
@@ -103,8 +110,8 @@
 											small
 										>
 											{{ message.new }} new
-										</v-chip>
-										<strong>거래 목록</strong>
+										</v-chip> -->
+										<strong>내 거래 목록</strong>
 									</v-col>
 									<v-col class="grey--text text-truncate hidden-sm-and-down">
 										총 {{ userBList.length }} 개의 게시물
@@ -124,25 +131,28 @@
 											<v-list-item three-line>
 												<v-list-item-content>
 													<div class="overline mb-4">
-														{{ item.modifiedDate | timeForToday }}
+														{{ item.modifiedAt | timeForToday }}
 													</div>
 													<div class="overline mb-4">
 														거래 상태 : {{ item.status | tradeStatus }}
 													</div>
+													<div class="overline mb-4">
+														카테고리 :
+														{{ item.categoryId.subCategoryId.name }} >
+														{{ item.categoryId.name }}
+													</div>
+
 													<v-list-item-title class="headline mb-1">
 														{{ item.title }}
 													</v-list-item-title>
-													<v-list-item-subtitle>{{
-														item.content
-													}}</v-list-item-subtitle>
 													<v-list-item-subtitle>{{}}</v-list-item-subtitle>
+													<v-list-item-subtitle
+														>{{ item.price }} 원
+													</v-list-item-subtitle>
 												</v-list-item-content>
 
 												<v-list-item-avatar tile size="120" color="grey">
-													<v-img
-														v-bind:src="item.imageurl1 | loadImgOrPlaceholder"
-													>
-													</v-img>
+													<v-img v-bind:src="item.thumbnail"> </v-img>
 												</v-list-item-avatar>
 											</v-list-item>
 
@@ -175,7 +185,8 @@ export default {
 	data() {
 		return {
 			userBList: [],
-			userInfo: [],
+			userInfo: {},
+
 			messages: [
 				{
 					avatar: 'https://avatars0.githubusercontent.com/u/9064066?v=4&s=460',
@@ -183,27 +194,34 @@ export default {
 				},
 			],
 			department: '',
+			gender: '',
+			token: '',
 		};
 	},
 	mounted() {
-		const token = localStorage.getItem('user');
-		if (!token) {
-			this.$router.push({ name: 'UserLogin' });
+		console.log('profile init .....');
+
+		let jwt = localStorage.getItem('jwt');
+		if (!localStorage.getItem('jwt')) {
+			jwt = '';
 		}
-		if (!userTokenValid(token)) {
-			alert('토큰이 만료되었습니다. 로그아웃됩니다.');
-			this.$router.push(this.$route.query.redirect || '/user/login');
+		this.$store.dispatch('auth/userTokenValid2', jwt);
+		if (localStorage.getItem('jwt')) {
+			this.myBoardList(jwt);
+			// this.userInfoList(jwt);
+			this.userInfoList(jwt);
+
+			this.token = localStorage.getItem('jwt');
 		}
-		this.userBoardList(token);
-		this.userInfoList(token);
 	},
 
 	methods: {
-		userBoardList(token) {
+		myBoardList(token) {
 			return http
-				.process('user', 'userBoard', null, { token: token })
+				.process('boards', 'myboard', null, { token: token })
 				.then((res) => {
-					this.userBList = res;
+					this.userBList = res.boardResponseDtoList;
+					console.log(this.userBList);
 				})
 				.catch((err) => {
 					console.log(err);
@@ -211,10 +229,16 @@ export default {
 		},
 		userInfoList(token) {
 			return http
-				.process('user', 'userinfo', null, { token: token })
+				.process('user', 'userInfo', null, { token: token })
 				.then((res) => {
+					console.log(res);
 					this.userInfo = res;
-					this.department = res.department.name;
+					this.department = res.departmentId.name;
+					if (res.gender == 0) {
+						this.gender = '남성';
+					} else {
+						this.gender = '여성';
+					}
 				})
 				.catch((err) => {
 					console.log(err);

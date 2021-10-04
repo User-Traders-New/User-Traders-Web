@@ -102,6 +102,37 @@ const actions = {
 		this.$router.push({ name: 'UserLogin' });
 	},
 
+	//토큰값 유효성 검사
+	userTokenValid({ commit }, jwt) {
+		return http
+			.process('user', 'userValid', { token: jwt })
+			.then((res) => {
+				console.log(res);
+				if (res.valid == false) {
+					commit('logoutState');
+					router.push({ name: 'Home' }).catch(() => {});
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	},
+	userTokenValid2({ commit }, jwt) {
+		return http
+			.process('user', 'userValid', { token: jwt })
+			.then((res) => {
+				console.log(res);
+				if (res.valid == false) {
+					commit('logoutState');
+					alert('로그인해주세요.');
+					router.push({ name: 'Home' }).catch(() => {});
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	},
+
 	// 초기 로그인 test 및 연습
 	// login({ state, commit }, loginObj) {
 	// 	let selectUser = null;

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import domain from './domain.js';
 import { EventBus } from '@/event-bus.js';
+import router from '../../router/index.js';
 
 const WAS_URL = process.env.VUE_APP_WAS;
 
@@ -111,6 +112,7 @@ const http = {
 								console.log(`${res.status}, ${res.data.error}`);
 								EventBus.$emit('user:invalid');
 								reject(err);
+								router.push({ name: 'UserLogin' });
 							} else if (res.data) {
 								console.log(`${res.status}`);
 								reject(res.data);

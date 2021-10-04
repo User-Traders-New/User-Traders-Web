@@ -328,8 +328,16 @@ export default {
 	methods: {
 		init() {
 			console.log('detail init...');
-			this.getListDetail(this.id);
-			this.token = localStorage.getItem('jwt');
+
+			let jwt = localStorage.getItem('jwt');
+			if (!localStorage.getItem('jwt')) {
+				jwt = '';
+			}
+			this.$store.dispatch('auth/userTokenValid2', jwt);
+			if (localStorage.getItem('jwt')) {
+				this.getListDetail(this.id);
+				this.token = localStorage.getItem('jwt');
+			}
 		},
 		getListDetail(id) {
 			let jwt = localStorage.getItem('jwt');
@@ -388,7 +396,7 @@ export default {
 					console.log(res.message);
 					if (
 						res.message !=
-						'19번 게시물을 장바구니에 담기 취소에 성공하였습니다.'
+						id + '번 게시물을 장바구니에 담기 취소에 성공하였습니다.'
 					) {
 						if (
 							confirm(
@@ -410,6 +418,7 @@ export default {
 		...mapActions({
 			_getListDetail: 'users/getListDetail',
 			getUserLogout: 'auth/getUserLogout',
+			userTokenValid2: 'auth/userTokenValid2',
 		}),
 	},
 };

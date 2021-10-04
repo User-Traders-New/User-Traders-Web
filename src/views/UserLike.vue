@@ -63,7 +63,6 @@
 <script>
 import http from '@/utils/http';
 import Formatter from '@/mixin/Formatter';
-import { userTokenValid } from '@/api/userValid';
 import { mapActions } from 'vuex';
 export default {
 	mixins: [Formatter],
@@ -77,18 +76,26 @@ export default {
 	},
 	methods: {
 		init() {
-			if (!localStorage.getItem('jwt')) {
-				this.getUserLogout().then(() => {
-					this.isLoading = false;
-				});
-			} else {
-				const jwt = localStorage.getItem('jwt');
-				this.getCartList(jwt);
-			}
-			// } else if (!userTokenValid(token)) {
-			// 	alert('토큰이 만료되었습니다. 다시 로그인 해주세요!!');
-			// 	this.$router.push({ name: 'UserLogin' });
+			console.log('userLike init...');
+
+			// if (!localStorage.getItem('jwt')) {
+			// 	this.getUserLogout().then(() => {
+			// 		this.isLoading = false;
+			// 	});
+			// } else {
+			// 	const jwt = localStorage.getItem('jwt');
+
 			// }
+
+			let jwt = localStorage.getItem('jwt');
+			if (!localStorage.getItem('jwt')) {
+				jwt = '';
+			}
+			this.$store.dispatch('auth/userTokenValid2', jwt);
+			if (localStorage.getItem('jwt')) {
+				this.getCartList(jwt);
+				this.token = localStorage.getItem('jwt');
+			}
 		},
 		getCartList(jwt) {
 			return http

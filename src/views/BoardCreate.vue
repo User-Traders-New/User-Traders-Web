@@ -222,9 +222,9 @@
 <script>
 import http from '@/utils/http';
 import { mapState, mapActions } from 'vuex';
-import { userTokenValid } from '@/api/userValid';
 
 export default {
+	beforeCreate() {},
 	components: {},
 	data() {
 		return {
@@ -263,15 +263,17 @@ export default {
 		}),
 	},
 	mounted() {
-		this.token = localStorage.getItem('jwt');
-		if (userTokenValid(this.token) == false) {
-			alert('로그인 시간이 만료되었습니다. 다시 로그인 해주세요!!');
-			this.getUserLogout();
+		console.log('create init...');
+		let jwt = localStorage.getItem('jwt');
+		if (!localStorage.getItem('jwt')) {
+			jwt = '';
 		}
-		if (!this.token) {
-			alert('로그인을 해야 상품 등록이 가능합니다!!');
-			this.getUserLogout();
-		}
+
+		this.$store.dispatch('auth/userTokenValid2', jwt);
+		// if (userTokenValid(this.token) == false) {
+		// 	alert('로그인 시간이 만료되었습니다. 다시 로그인 해주세요!!');
+		// 	this.getUserLogout();
+		// }
 	},
 	methods: {
 		validate() {
@@ -397,6 +399,7 @@ export default {
 		...mapActions({
 			getCategories: 'users/getCategories',
 			getSubCategories: 'users/getSubCategories',
+			userTokenValid2: 'auth/userTokenValid2',
 			getUserLogout: 'auth/getUserLogout',
 		}),
 	},
