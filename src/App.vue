@@ -42,9 +42,9 @@
 							left:12px;top:5px
 							"
               >
-                <span style="color:#fa5252" class="font-bold font-weight">{{
+                <!-- <span style="color:#fa5252" class="font-bold font-weight">{{
                   likeCount
-                }}</span>
+                }}</span> -->
               </v-card-text>
             </v-avatar>
           </v-btn>

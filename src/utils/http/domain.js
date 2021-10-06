@@ -25,6 +25,8 @@ export default {
     like: { task: "post", url: "/boards/like" },
     //헤딩 회원 게시물 찜 목록  --토큰
     listlike: { task: "get", url: "/boards/like/list" },
+    //댓글저장
+    commentSend: { task: "post", url: "/boards/parent/comment" },
   },
   user: {
     //초기 토큰 유효성 검사
