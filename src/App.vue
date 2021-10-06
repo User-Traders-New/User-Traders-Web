@@ -37,6 +37,15 @@
 							<v-icon size="xx-large" color="red">
 								mdi-heart
 							</v-icon>
+							<v-card-text
+								style="position:absolute;
+							left:12px;top:5px
+							"
+							>
+								<span style="color:#fa5252" class="font-bold font-weight">{{
+									likeCount
+								}}</span>
+							</v-card-text>
 						</v-avatar>
 					</v-btn>
 				</div>
@@ -219,6 +228,7 @@ export default {
 			userInfo: (state) => state.auth.userInfo,
 			profileImg: (state) => state.auth.profileImg,
 			jwt: (state) => state.auth.jwt,
+			likeCount: (state) => state.auth.likeCount,
 		}),
 	},
 	mounted() {},
@@ -232,6 +242,7 @@ export default {
 			this.getUserLogout(jwt).then(() => {
 				localStorage.removeItem('user');
 				localStorage.removeItem('jwt');
+				localStorage.removeItem('likeCount');
 				this.$router.push({ name: 'UserLogin' });
 			});
 		},

@@ -258,6 +258,7 @@ export default {
 						this.getUserLogout().then(() => {
 							this.isLoading = false;
 							localStorage.removeItem('user');
+
 							this.$router.push({ name: 'Home' });
 						});
 						this.$router.push(this.$route.query.redirect || '/user/login');

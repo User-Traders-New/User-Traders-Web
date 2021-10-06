@@ -7,6 +7,7 @@ const state = {
 	profileImg: '',
 	isLogin: false,
 	isLoginError: false,
+	likeCount: 0,
 };
 
 const getters = {};
@@ -73,8 +74,10 @@ const actions = {
 					studentId: res.studentId,
 					gender: res.gender,
 					imagePath: res.imagePath,
+					likeCount: res.likeCount,
 				};
 				localStorage.setItem('user', user);
+				localStorage.setItem('likeCount', user.likeCount);
 				commit('isLoginedSuccess', user);
 				commit('isLoginedSuccess2', token);
 			})
@@ -98,6 +101,7 @@ const actions = {
 	validTokenError({ commit }) {
 		localStorage.removeItem('user');
 		localStorage.removeItem('token');
+		localStorage.removeItem('likeCount');
 		commit('logoutState');
 		this.$router.push({ name: 'UserLogin' });
 	},
@@ -154,6 +158,7 @@ const mutations = {
 	isLoginedSuccess(state, data) {
 		state.userInfo = data;
 		state.profileImg = data.imagePath;
+		state.likeCount = data.likeCount;
 	}, //로그인 성공 후 jwt 토큰과 성공 여부 state에 저장
 	isLoginedSuccess2(state, data) {
 		state.isLogin = true;
@@ -171,6 +176,7 @@ const mutations = {
 	logoutState(state) {
 		localStorage.removeItem('jwt');
 		localStorage.removeItem('user');
+		localStorage.removeItem('likeCount');
 		state.isLogin = false;
 		state.isLoginError = false;
 		state.jwt = '';
