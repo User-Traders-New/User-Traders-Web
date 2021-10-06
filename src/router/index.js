@@ -12,6 +12,7 @@ const Profile = () => import('../views/Profile.vue');
 const UserLike = () => import('../views/UserLike.vue');
 const Search = () => import('../views/Search.vue');
 const Empty = () => import('../components/empty/empty.vue');
+const Chat = () => import('../views/Chat.vue');
 const routes = [
 	{
 		path: '/',
@@ -37,7 +38,12 @@ const routes = [
 		component: Search,
 		// props: true
 	},
-
+	//*****************채팅 */
+	{
+		path: '/chat',
+		name: 'Chat',
+		component: Chat,
+	},
 	{
 		path: '/user',
 		component: Empty,
