@@ -7,6 +7,8 @@ const state = {
 		},
 	},
 	listDataDeatailUserId: {},
+	listUsersBoardsData: [],
+
 	boardParentComment: [],
 	board_cur_two: [],
 	detailImageurl: [],
@@ -62,6 +64,25 @@ const actions = {
 				console.log(err);
 			});
 	},
+	getlistUsersBoardsData({ commit }, payload) {
+		return http
+			.process(
+				'boards',
+				'userBoard',
+				{ userId: payload.userId },
+				{ token: payload.token }
+			)
+			.then((res) => {
+				console.log(res);
+				commit('setlistUsersBoardsData', res.boardResponseDtoList);
+				console.log(state.listDataDeatailUserId);
+			})
+			.catch((err) => {
+				console.log(err);
+				alert('로그인 후 이용해 주세요');
+				this.$router.push({ name: 'UserLogin' });
+			});
+	},
 };
 
 const mutations = {
@@ -78,11 +99,23 @@ const mutations = {
 		state.listDataDeatail = data.boardResponseLoginDto;
 		state.boardParentComment = data.boardResponseLoginDto.boardParentComment;
 		state.listDataDeatailUserId = data.boardResponseLoginDto.userId;
+		console.log('@@@@@@@@@@@@@유저아이디');
+		console.log(state.listDataDeatailUserId);
 		for (var i = 0; i < 2; i++) {
-			state.board_cur_two = state.board_cur_two.concat(
-				data.boardResponseLoginDto.boardParentComment[i].userId
-			);
+			if (data.boardResponseLoginDto.boardParentComment[i]) {
+				state.board_cur_two = state.board_cur_two.concat(
+					data.boardResponseLoginDto.boardParentComment[i].userId
+				);
+			} else {
+				state.board_cur_two = null;
+			}
 		}
+	},
+	setlistUsersBoardsData(state, data) {
+		console.log('@@@@@@@@@@@@@@@data');
+		console.log(data);
+		console.log('@@@@@@@@@@@@@@');
+		state.listUsersBoardsData = data;
 	},
 	setCategories(state, data) {
 		state.categories = data;

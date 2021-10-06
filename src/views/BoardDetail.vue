@@ -212,6 +212,40 @@
 									</v-icon>
 									{{ listDataDeatail.chatCount }}
 								</div>
+								<div>
+									<div class="ml-10">
+										<v-btn
+											@click="likeAddDelete(listDataDeatail.id)"
+											color="#F0F0E6"
+											class="ma-2 orange--text pa-5"
+										>
+											찜하기
+											<v-icon
+												v-if="listDataDeatail.likeWhether == 0"
+												color="white"
+												class="ml-2"
+											>
+												mdi-heart
+											</v-icon>
+											<v-icon
+												v-if="listDataDeatail.likeWhether == 1"
+												color="red"
+												class="ml-2"
+											>
+												mdi-heart
+											</v-icon>
+										</v-btn>
+										<v-btn color="orange" class="ma-2 white--text pa-5">
+											채팅하기
+											<v-icon color="yellow" class="ml-2">
+												mdi-chat-processing
+											</v-icon>
+											<!-- <v-icon right dark>
+								mdi-arrow-right-bold
+							</v-icon> -->
+										</v-btn>
+									</div>
+								</div>
 								<div class="ml-7" style="display:flex;flex-direction:row">
 									<v-form>
 										<v-text-field
@@ -252,39 +286,62 @@
 							</div>
 						</v-card-text>
 					</div>
-
 					<div>
-						<div class="ml-10">
-							<v-btn
-								@click="likeAddDelete(listDataDeatail.id)"
-								color="#F0F0E6"
-								class="ma-2 orange--text pa-5"
-							>
-								찜하기
-								<v-icon
-									v-if="listDataDeatail.likeWhether == 0"
-									color="white"
-									class="ml-2"
-								>
-									mdi-heart
-								</v-icon>
-								<v-icon
-									v-if="listDataDeatail.likeWhether == 1"
-									color="red"
-									class="ml-2"
-								>
-									mdi-heart
-								</v-icon>
-							</v-btn>
-							<v-btn color="orange" class="ma-2 white--text pa-5">
-								채팅하기
-								<v-icon color="yellow" class="ml-2">
-									mdi-chat-processing
-								</v-icon>
-								<!-- <v-icon right dark>
-								mdi-arrow-right-bold
-							</v-icon> -->
-							</v-btn>
+						<div
+							@click="nextProduct(listDataDeatailUserId.id)"
+							style="display: flex; justify-content: center; align-items: center;"
+						>
+							해당 회원의 다른 거래 물품 보기 click!!
+						</div>
+						<!-- 해당 회원 다른 거래 물품 -->
+						<div v-if="isnextProd">
+							<div>
+								<v-container v-if="listUsersBoardsData">
+									<v-row>
+										<v-col
+											v-for="(item, i) in listUsersBoardsData"
+											:key="`item-${i}`"
+											cols="12"
+											sm="4"
+										>
+											<div @click="detailPush(item.id)">
+												<v-card max-width="344">
+													<div style="text-align : left; color : #fc9942">
+														<v-icon
+															class="pr-2 pl-2"
+															title="카테고리"
+															color="#fc9942"
+														>
+															mdi-tag
+														</v-icon>
+														{{ item.categoryId.subCategoryId.name }} >
+														{{ item.categoryId.name }}
+													</div>
+													<div style="display:flex; flex-direction:row">
+														<div>
+															<v-list-item-avatar tile size="100" color="grey">
+																<v-img v-bind:src="item.thumbnail"> </v-img>
+															</v-list-item-avatar>
+														</div>
+														<div
+															class="font-weight-medium"
+															style="font-size:x-large; font-weight:bold"
+														>
+															{{ item.title }}
+														</div>
+													</div>
+													<div
+														class="font-weight-medium float-right "
+														style="font-size:large;"
+													>
+														{{ item.price | moneyFilter }} 원
+													</div>
+												</v-card>
+											</div>
+										</v-col>
+									</v-row>
+								</v-container>
+							</div>
 						</div>
 					</div>
 				</v-card>
@@ -310,6 +367,7 @@ export default {
 			isLoading: true,
 			token: '',
 			iscommented: false,
+			isnextProd: false,
 		};
 	},
 
@@ -320,6 +378,7 @@ export default {
 			boardParentComment: (state) => state.users.boardParentComment,
 			listDataDeatailUserId: (state) => state.users.listDataDeatailUserId,
 			board_cur_two: (state) => state.users.board_cur_two,
+			listUsersBoardsData: (state) => state.users.listUsersBoardsData,
 		}),
 	},
 	mounted() {
@@ -348,6 +407,17 @@ export default {
 			this._getListDetail(payload).then(() => {
 				this.isLoading = false;
 			});
+		},
+		detailPush(id) {
+			console.log(id);
+			if (this.$store.state.users.listDataDeatail.id == id) {
+				return;
+			}
+			this.$router
+				.push({ name: 'BoardDetail', params: { id: id } })
+				.then(() => {
+					this.init();
+				});
 		},
 		// messageSend() {
 		// 	this.$router.push({
@@ -415,10 +485,22 @@ export default {
 					this.$router.push({ name: 'UserLogin' });
 				});
 		},
+
+		async nextProduct(user_Id) {
+			this.isnextProd = !this.isnextProd;
+			if (this.isnextProd == true) {
+				let payload = {
+					userId: user_Id,
+					token: this.token,
+				};
+				await this.getlistUsersBoardsData(payload);
+			}
+		},
 		...mapActions({
 			_getListDetail: 'users/getListDetail',
 			getUserLogout: 'auth/getUserLogout',
 			userTokenValid2: 'auth/userTokenValid2',
+			getlistUsersBoardsData: 'users/getlistUsersBoardsData',
 		}),
 	},
 };

@@ -171,7 +171,7 @@
 												class="font-weight-medium float-right "
 												style="font-size:large;"
 											>
-												{{ item.price || moneyFilter }} 원
+												{{ item.price | moneyFilter }} 원
 											</div>
 										</v-card-text>
 

@@ -371,6 +371,12 @@ export default {
 			if (!this.images.length) {
 				return alert('이미지는 1장 이상 올려주세요.');
 			}
+			let jwt = localStorage.getItem('jwt');
+			if (!localStorage.getItem('jwt')) {
+				jwt = '';
+			}
+			this.$store.dispatch('auth/userTokenValid2', jwt);
+
 			//server 전송
 			var frm = new FormData();
 			this.photoFile = this.images;
@@ -386,8 +392,9 @@ export default {
 			for (var i = 0; i < this.images.length; i++) {
 				frm.append('files', this.images[i]);
 			}
+
 			return http
-				.process('boards', 'boardCreate', frm, { token: this.token })
+				.process('boards', 'boardCreate', frm, { token: jwt })
 				.then((res) => {
 					console.log(res);
 					this.$router.push({ name: 'Home' });
@@ -399,7 +406,6 @@ export default {
 		...mapActions({
 			getCategories: 'users/getCategories',
 			getSubCategories: 'users/getSubCategories',
-			userTokenValid2: 'auth/userTokenValid2',
 			getUserLogout: 'auth/getUserLogout',
 		}),
 	},

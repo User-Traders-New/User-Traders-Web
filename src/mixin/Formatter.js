@@ -4,7 +4,6 @@ let Formatter = {
 		// 	return require('@/assets/images/' + path);
 		// },
 		moneyFilter: function(value) {
-			console.log(value);
 			if (value == undefined) {
 				return undefined;
 			}
@@ -33,6 +32,18 @@ let Formatter = {
 			}
 
 			return `${Math.floor(betweenTimeDay / 365)}년전`;
+		},
+		timeFormate: function(value) {
+			let day = value.split('T')[0];
+			console.log(day);
+			let time = value.split('T')[1].split(':')[0];
+
+			return day + ' ' + time + ' 시';
+		},
+		stringLowerFormate: function(value) {
+			let a = value.toLowerCase();
+
+			return a;
 		},
 		tradeStatus: function(value) {
 			if (value == 0) {

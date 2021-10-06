@@ -149,6 +149,7 @@
 		<v-main>
 			<router-view></router-view>
 		</v-main>
+
 		<v-bottom-navigation height="60" style="" color="#ff6d00" fixed>
 			<v-btn :to="{ name: 'Home' }">
 				<span style="color : #00000099; font-size : medium">홈</span>

@@ -45,7 +45,7 @@
 									<v-list-item three-line>
 										<v-list-item-content>
 											<div class="overline mb-4">
-												email : {{ userInfo.email }}
+												email : {{ userInfo.email | stringLowerFormate }}
 											</div>
 											<div class="overline mb-4">
 												닉네임 : {{ userInfo.nickname }}
@@ -54,7 +54,7 @@
 												이름 : {{ userInfo.userNamed }}
 											</div>
 											<div class="overline mb-4">
-												가입일 : {{ userInfo.createAt }}
+												가입일 : {{ userInfo.createAt | timeFormate }}
 											</div>
 											<div class="overline mb-4">TEL : {{ userInfo.tel }}</div>
 											<div class="overline mb-4">학과 : {{ department }}</div>
@@ -129,41 +129,50 @@
 									>
 										<v-card class="mx-auto" max-width="344" outlined>
 											<v-list-item three-line>
-												<v-list-item-content>
-													<div class="overline mb-4">
-														{{ item.modifiedAt | timeForToday }}
+												<div style="display:flex; flex-direction:row">
+													<div>
+														<v-list-item-avatar tile size="120" color="grey">
+															<v-img v-bind:src="item.thumbnail"> </v-img>
+														</v-list-item-avatar>
 													</div>
-													<div class="overline mb-4">
-														거래 상태 : {{ item.status | tradeStatus }}
+													<div>
+														<v-list-item-content>
+															<div class="overline mb-4">
+																{{ item.modifiedAt | timeForToday }}
+															</div>
+															<div class="overline mb-4">
+																거래 상태 : {{ item.status | tradeStatus }}
+															</div>
+															<div class="overline mb-4">
+																{{ item.categoryId.subCategoryId.name }} >
+																{{ item.categoryId.name }}
+															</div>
+														</v-list-item-content>
 													</div>
-													<div class="overline mb-4">
-														카테고리 :
-														{{ item.categoryId.subCategoryId.name }} >
-														{{ item.categoryId.name }}
-													</div>
-
+												</div>
+											</v-list-item>
+											<v-list-item
+												><div>
 													<v-list-item-title class="headline mb-1">
 														{{ item.title }}
 													</v-list-item-title>
-													<v-list-item-subtitle>{{}}</v-list-item-subtitle>
-													<v-list-item-subtitle
-														>{{ item.price }} 원
+												</div></v-list-item
+											>
+											<v-list-item
+												><div style="display:flex;flex-direction:row">
+													<v-list-item-subtitle class="mr-10"
+														>{{ item.price | moneyFilter }} 원
 													</v-list-item-subtitle>
-												</v-list-item-content>
-
-												<v-list-item-avatar tile size="120" color="grey">
-													<v-img v-bind:src="item.thumbnail"> </v-img>
-												</v-list-item-avatar>
-											</v-list-item>
-
-											<v-card-actions>
-												<v-btn outlined rounded text color="orange">
-													상세보기
-												</v-btn>
-												<v-btn outlined rounded text color="orange">
-													수정하기
-												</v-btn>
-											</v-card-actions>
+													<v-card-actions class="ml-16">
+														<v-btn outlined rounded text color="orange">
+															상세보기
+														</v-btn>
+														<v-btn outlined rounded text color="orange">
+															수정하기
+														</v-btn>
+													</v-card-actions>
+												</div></v-list-item
+											>
 										</v-card>
 									</v-col>
 								</v-row>
@@ -178,7 +187,6 @@
 <script>
 import http from '@/utils/http';
 import Formatter from '@/mixin/Formatter';
-import { userTokenValid } from '@/api/userValid';
 import { mapActions } from 'vuex';
 export default {
 	mixins: [Formatter],
