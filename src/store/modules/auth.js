@@ -136,6 +136,22 @@ const actions = {
 				console.log(err);
 			});
 	},
+	likeAddDelete2({ commit }, payload) {
+		return http
+			.process(
+				'boards',
+				'like',
+				{ boardId: { id: payload.id } },
+				{ token: payload.token }
+			)
+			.then((res) => {
+				commit('setLikeCount', res);
+				return res;
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	},
 
 	// 초기 로그인 test 및 연습
 	// login({ state, commit }, loginObj) {
@@ -182,6 +198,18 @@ const mutations = {
 		state.jwt = '';
 		state.profileImg = '';
 		state.userInfo = null;
+	},
+	setLikeCount(state, data) {
+		console.log('@@222222222222222225555555@@@');
+		console.log(data);
+		let p = data.message.split(' ')[4];
+		if (p == '취소에') {
+			state.likeCount -= 1;
+			localStorage.setItem('likeCount', state.likeCount);
+		} else {
+			state.likeCount += 1;
+			localStorage.setItem('likeCount', state.likeCount);
+		}
 	},
 };
 

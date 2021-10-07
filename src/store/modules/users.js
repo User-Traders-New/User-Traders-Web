@@ -17,6 +17,7 @@ const state = {
 	newlistData: null,
 	categories: [],
 	subcategories: [],
+	myLikeCount: 0,
 };
 
 const getters = {};
@@ -99,8 +100,6 @@ const mutations = {
 		state.listDataDeatail = data.boardResponseLoginDto;
 		state.boardParentComment = data.boardResponseLoginDto.boardParentComment;
 		state.listDataDeatailUserId = data.boardResponseLoginDto.userId;
-		console.log('@@@@@@@@@@@@@유저아이디');
-		console.log(state.listDataDeatailUserId);
 
 		for (var i = 0; i < 2; i++) {
 			if (data.boardResponseLoginDto.boardParentComment[i]) {

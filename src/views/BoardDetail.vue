@@ -246,12 +246,11 @@
 										</v-btn>
 									</div>
 								</div>
-								<div class="ml-7" style="display:flex;flex-direction:row">
+								<div fixed class="ml-7" style="display:flex;flex-direction:row">
 									<v-form>
 										<v-text-field
 											v-model="commented"
 											counter="15"
-											clearable
 											autocomplete="off"
 											label="댓글"
 											prepend-icon="mdi-comment-text-multiple"
@@ -294,7 +293,12 @@
 								>
 									<div style="display:flex ;  flex-direction:column">
 										<div style="display:flex ;  flex-direction:row;">
-											<div class="mr-3 mb-3" style="font-size : 17px">
+											<div
+												class="pr-3 mr-3 mb-3"
+												style="font-size : 17px;
+                      border-right:solid; border-width:0.1px; border-color: #cccccc;
+                      "
+											>
 												{{ CC_Item.userId.nickName }}
 											</div>
 											<div class="mr-2" style="font-size : 14px">
@@ -337,6 +341,7 @@
 							</v-card-text>
 						</div>
 					</div>
+					<!-- 다른 회원 거래 물품 -->
 					<div>
 						<div
 							@click="nextProduct(listDataDeatailUserId.id)"
@@ -435,12 +440,16 @@ export default {
 			listDataDeatailUserId: (state) => state.users.listDataDeatailUserId,
 			board_cur_two: (state) => state.users.board_cur_two,
 			listUsersBoardsData: (state) => state.users.listUsersBoardsData,
+			likeCount: (state) => state.auth.likeCount,
 		}),
 	},
 	mounted() {
 		this.init();
 	},
 	methods: {
+		// ...mapMutations({
+		// 	setLikeCount: 'auth/setLikeCount',
+		// }),
 		init() {
 			console.log('detail init...');
 
@@ -504,51 +513,19 @@ export default {
 					console.log(err);
 				});
 		},
-		// messageSend() {
-		// 	this.$router.push({
-		// 		name: 'MailWrite',
-		// 		params: {
-		// 			id: this.listDataDeatail.user.id,
-		// 			email: this.listDataDeatail.user.username,
-		// 		},
-		// 	});
-		// },
 		clickedComment() {
 			this.iscommented = true;
-			alert('gg');
 		},
-		// cartAdd(id) {
-		// 	return http
-		// 		.process('cart', 'register', { boardId: id }, { token: this.token })
-		// 		.then((res) => {
-		// 			console.log(res);
-		// 			this.$router.push({ name: 'Cart' });
-		// 		})
-		// 		.catch((err) => {
-		// 			if (err.message === '로그인 되지 않았습니다. 로그인 해주세요.') {
-		// 				alert(err.message);
-		// 				this.$router.push(this.$route.query.redirect || '/user/login');
-		// 			}
-		// 			if (
-		// 				err.message === '나의 게시물은 장바구니에 담을 수 없습니다.' ||
-		// 				err.message === '중복된 게시물은 장바구니에 담을 수 없습니다.'
-		// 			) {
-		// 				alert(err.message);
-		// 				this.$router.push(this.$route.query.redirect || '/detail/' + id);
-		// 			}
-		// 		});
-		// },
 		likeAddDelete(id) {
-			return http
-				.process(
-					'boards',
-					'like',
-					{ boardId: { id: id } },
-					{ token: this.token }
-				)
+			let payload = {
+				id: id,
+				token: this.token,
+			};
+
+			this.likeAddDelete2(payload)
 				.then((res) => {
 					console.log(res);
-					console.log(res.message);
+					console.log(id);
 					if (
 						res.message !=
 						id + '번 게시물을 장바구니에 담기 취소에 성공하였습니다.'
@@ -561,12 +538,10 @@ export default {
 							this.$router.push({ name: 'UserLike' });
 						}
 					}
-
 					this.init();
 				})
 				.catch((err) => {
 					console.log(err);
-					alert('로그인 후 이용해 주세요');
 					this.$router.push({ name: 'UserLogin' });
 				});
 		},
@@ -586,6 +561,8 @@ export default {
 			getUserLogout: 'auth/getUserLogout',
 			userTokenValid2: 'auth/userTokenValid2',
 			getlistUsersBoardsData: 'users/getlistUsersBoardsData',
+			getUserInfo: 'auth/getUserInfo',
+			likeAddDelete2: 'auth/likeAddDelete2',
 		}),
 	},
 };
