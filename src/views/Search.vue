@@ -1,6 +1,5 @@
 <template>
 	<div>
-		<!-- <v-card class="mx-auto overflow-hidden mt-16 mb-16 pt-2" height="auto"> -->
 		<!-- 제목검색 -->
 		<div class="pt-16">
 			<v-toolbar class=" pb-16  " color="white">
@@ -378,7 +377,6 @@ export default {
 					subCategoryId: this.subCategoryId,
 				})
 				.then((res) => {
-					console.log(res.boardCategoryDtoList);
 					this.listCategory = res.boardCategoryDtoList;
 				})
 				.catch((err) => {
@@ -401,10 +399,7 @@ export default {
 						this.listData = res.boardResponseDtoList;
 
 						this.searchKeyword = '해당 카테고리';
-						// res.boardResponseDtoList[0].catagoryId.subCategoryId.name +
-						// ' > ' +
-						// res.boardResponseDtoList[0].catagoryId.name +
-						// '카테고리';
+
 						this.isSearch = true;
 					}
 				})

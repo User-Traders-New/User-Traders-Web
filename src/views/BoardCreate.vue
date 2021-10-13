@@ -186,9 +186,6 @@
 										@click="removeImage(i)"
 									>
 										{{ i + 1 }}번 삭제
-										<!-- <v-icon class="ml-2" dark>
-											mdi-block-helper
-										</v-icon> -->
 									</v-btn>
 								</th>
 							</tr>
@@ -270,10 +267,6 @@ export default {
 		}
 
 		this.$store.dispatch('auth/userTokenValid2', jwt);
-		// if (userTokenValid(this.token) == false) {
-		// 	alert('로그인 시간이 만료되었습니다. 다시 로그인 해주세요!!');
-		// 	this.getUserLogout();
-		// }
 	},
 	methods: {
 		validate() {
@@ -322,20 +315,12 @@ export default {
 			if (index == 0) {
 				return alert('첫번째는 위로 올릴수 없습니다.');
 			}
-			console.log('변경전');
-			console.log(this.images);
-			console.log(this.image);
 
 			let item = this.images.splice(index, 1);
 			let item2 = this.image.splice(index, 1);
 
 			this.images.splice(index - 1, 0, item[0]);
 			this.image.splice(index - 1, 0, item2[0]);
-
-			console.log(this.images);
-
-			console.log('변경후');
-			console.log(this.images);
 		},
 		downImageIndex(index) {
 			if (index == this.images.length - 1) {
@@ -380,15 +365,21 @@ export default {
 			//server 전송
 			var frm = new FormData();
 			this.photoFile = this.images;
+
 			frm.append('title', this.title);
+
 			frm.append('content', this.content);
+
 			frm.append('price', this.price);
-			// const tempCategory = this.category.split(' ');
-			console.log(this.subcategory);
+
 			const tempSubCategory = this.subcategory.split(' ');
+
 			frm.append('categoryId', tempSubCategory[0]);
+
 			frm.append('status', 0);
+
 			frm.append('grade', 0);
+
 			for (var i = 0; i < this.images.length; i++) {
 				frm.append('files', this.images[i]);
 			}
@@ -406,7 +397,6 @@ export default {
 		...mapActions({
 			getCategories: 'users/getCategories',
 			getSubCategories: 'users/getSubCategories',
-			getUserLogout: 'auth/getUserLogout',
 		}),
 	},
 };

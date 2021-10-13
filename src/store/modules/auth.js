@@ -152,21 +152,6 @@ const actions = {
 				console.log(err);
 			});
 	},
-
-	// 초기 로그인 test 및 연습
-	// login({ state, commit }, loginObj) {
-	// 	let selectUser = null;
-	// 	state.memberUser.forEach((user) => {
-	// 		if (user.email === loginObj.email) {
-	// 			selectUser = user;
-	// 		}
-	// 	});
-	// 	if (selectUser === null || selectUser.password !== loginObj.password)
-	// 		commit('loginError');
-	// 	else {
-	// 		commit('loginSuccess', selectUser);
-	// 	}
-	// },
 };
 
 const mutations = {
@@ -200,8 +185,6 @@ const mutations = {
 		state.userInfo = null;
 	},
 	setLikeCount(state, data) {
-		console.log('@@222222222222222225555555@@@');
-		console.log(data);
 		let p = data.message.split(' ')[4];
 		if (p == '취소에') {
 			state.likeCount -= 1;

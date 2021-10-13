@@ -18,23 +18,9 @@
 												alt="Avatar"
 												v-bind:src="userInfo.imagePath"
 											/>
-											<!-- <v-icon
-												v-else
-												:color="message.color"
-												v-text="message.icon"
-											></v-icon> -->
 										</v-avatar>
 									</v-col>
 									<v-col class="text-no-wrap" cols="5" sm="3">
-										<!-- <v-chip
-											v-if="message.new"
-											:color="`${message.color} lighten-4`"
-											class="ml-0 mr-2 black--text"
-											label
-											small
-										>
-											{{ message.new }} new
-										</v-chip> -->
 										<strong>내 정보</strong>
 									</v-col>
 								</v-row>
@@ -94,23 +80,9 @@
 												alt="Avatar"
 												v-bind:src="userInfo.imagePath"
 											/>
-											<!-- <v-icon
-												v-else
-												:color="message.color"
-												v-text="message.icon"
-											></v-icon> -->
 										</v-avatar>
 									</v-col>
 									<v-col class="text-no-wrap" cols="5" sm="3">
-										<!-- <v-chip
-											v-if="message.new"
-											:color="`${message.color} lighten-4`"
-											class="ml-0 mr-2 black--text"
-											label
-											small
-										>
-											{{ message.new }} new
-										</v-chip> -->
 										<strong>내 거래 목록</strong>
 									</v-col>
 									<v-col class="grey--text text-truncate hidden-sm-and-down">
@@ -216,7 +188,6 @@ export default {
 		this.$store.dispatch('auth/userTokenValid2', jwt);
 		if (localStorage.getItem('jwt')) {
 			this.myBoardList(jwt);
-			// this.userInfoList(jwt);
 			this.userInfoList(jwt);
 
 			this.token = localStorage.getItem('jwt');
@@ -229,7 +200,6 @@ export default {
 				.process('boards', 'myboard', null, { token: token })
 				.then((res) => {
 					this.userBList = res.boardResponseDtoList;
-					console.log(this.userBList);
 				})
 				.catch((err) => {
 					console.log(err);
