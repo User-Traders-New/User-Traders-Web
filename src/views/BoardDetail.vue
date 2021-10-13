@@ -1,6 +1,5 @@
 <template>
 	<div class="mt-16">
-		<!-- <loding v-if="isLoading" /> -->
 		<div v-if="listDataDeatail">
 			<v-row class="fill-height mt-5 mb-16" align="center" justify="center">
 				<v-card class="pa-2" tile flat>
@@ -447,9 +446,6 @@ export default {
 		this.init();
 	},
 	methods: {
-		// ...mapMutations({
-		// 	setLikeCount: 'auth/setLikeCount',
-		// }),
 		init() {
 			console.log('detail init...');
 
@@ -474,7 +470,6 @@ export default {
 			});
 		},
 		detailPush(id) {
-			console.log(id);
 			if (this.$store.state.users.listDataDeatail.id == id) {
 				return;
 			}
@@ -489,7 +484,6 @@ export default {
 			this.isCommentAdd = !this.isCommentAdd;
 		},
 		Sendcommented(message, boardId) {
-			console.log(message);
 			if (message.length >= 15) {
 				alert('15자이상 댓글을 입력 할 수 없습니다.');
 				return;
@@ -525,7 +519,7 @@ export default {
 			this.likeAddDelete2(payload)
 				.then((res) => {
 					console.log(res);
-					console.log(id);
+
 					if (
 						res.message !=
 						id + '번 게시물을 장바구니에 담기 취소에 성공하였습니다.'
@@ -558,10 +552,8 @@ export default {
 		},
 		...mapActions({
 			_getListDetail: 'users/getListDetail',
-			getUserLogout: 'auth/getUserLogout',
 			userTokenValid2: 'auth/userTokenValid2',
 			getlistUsersBoardsData: 'users/getlistUsersBoardsData',
-			getUserInfo: 'auth/getUserInfo',
 			likeAddDelete2: 'auth/likeAddDelete2',
 		}),
 	},

@@ -1,4 +1,5 @@
 import http from '@/utils/http';
+
 const state = {
 	listData: null,
 	listDataDeatail: {
@@ -11,6 +12,7 @@ const state = {
 
 	boardParentComment: [],
 	board_cur_two: [],
+
 	detailImageurl: [],
 	totalPage: null,
 	page: 1,
@@ -109,9 +111,6 @@ const mutations = {
 		}
 	},
 	setlistUsersBoardsData(state, data) {
-		console.log('@@@@@@@@@@@@@@@data');
-		console.log(data);
-		console.log('@@@@@@@@@@@@@@');
 		state.listUsersBoardsData = data;
 	},
 	setCategories(state, data) {

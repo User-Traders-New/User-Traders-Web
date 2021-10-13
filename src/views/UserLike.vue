@@ -78,15 +78,6 @@ export default {
 		init() {
 			console.log('userLike init...');
 
-			// if (!localStorage.getItem('jwt')) {
-			// 	this.getUserLogout().then(() => {
-			// 		this.isLoading = false;
-			// 	});
-			// } else {
-			// 	const jwt = localStorage.getItem('jwt');
-
-			// }
-
 			let jwt = localStorage.getItem('jwt');
 			if (!localStorage.getItem('jwt')) {
 				jwt = '';
@@ -104,7 +95,6 @@ export default {
 					this.cartList = res.boardLikeUserDtoList;
 				})
 				.catch((err) => {
-					console.log(err.message);
 					alert(err.message);
 					this.getUserLogout().then(() => {
 						this.isLoading = false;
@@ -114,18 +104,6 @@ export default {
 		...mapActions({
 			getUserLogout: 'auth/getUserLogout',
 		}),
-		// cartDelete(idx, id) {
-		// 	this.cartList.splice(idx, 1);
-		// 	return http
-		// 		.process('boards', 'like', { id: id })
-		// 		.then((res) => {
-		// 			console.log(res);
-		// 		})
-		// 		.catch((err) => {
-		// 			console.log(err);
-		// 		});
-		// },
-
 		likeAddDelete(idx, id) {
 			this.cartList.splice(idx, 1);
 			const jwt = localStorage.getItem('jwt');
