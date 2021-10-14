@@ -235,7 +235,7 @@
 												mdi-heart
 											</v-icon>
 										</v-btn>
-										<v-btn color="orange" class="ma-2 white--text pa-5">
+										<v-btn color="orange" class="ma-2 white--text pa-5" :to="{ name: 'Chat' }">
 											채팅하기
 											<v-icon color="yellow" class="ml-2">
 												mdi-chat-processing

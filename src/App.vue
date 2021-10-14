@@ -8,11 +8,11 @@
 				class="fixed-bar "
 				fixed
 			>
-				<!-- <v-toolbar-title>
+				<v-toolbar-title>
 					<v-btn icon @click="$router.go(-1)">
 						<v-icon size="xx-large" color="white">mdi-arrow-left</v-icon>
 					</v-btn>
-				</v-toolbar-title> -->
+				</v-toolbar-title>
 
 				<v-toolbar-title class="ma-2">
 					<a
@@ -25,32 +25,13 @@
 
 				<v-spacer></v-spacer>
 
-				<div v-if="jwt">
-					<v-btn
-						style="background-color:white"
-						class="mr-2"
-						icon
-						:to="{ name: 'UserLike' }"
-						align-center
-					>
-						<v-avatar size="45px">
-							<v-icon size="xx-large" color="red">
-								mdi-heart
-							</v-icon>
-							<v-card-text
-								style="position:absolute;
-							left:12px;top:5px
-							"
-							>
-								<span style="color:#fa5252" class="font-bold font-weight">{{
-									likeCount
-								}}</span>
-							</v-card-text>
-						</v-avatar>
+				<div v-if="loginflag">
+					<v-btn icon :to="{ name: 'Cart' }">
+						<v-icon size="xx-large" color="white">mdi-cart</v-icon>
 					</v-btn>
 				</div>
 
-				<div v-if="!jwt">
+				<div v-if="!loginflag">
 					<v-menu bottom left>
 						<template v-slot:activator="{ on, attrs }">
 							<v-btn
@@ -77,7 +58,6 @@
 										style="font-size : medium; text-align : center"
 									>
 										로그인
-										<v-icon dense align-content-center>mdi-login</v-icon>
 									</v-list-item-title>
 								</v-list-item-content>
 							</v-list-item>
@@ -93,7 +73,6 @@
 										style="font-size : medium; text-align : center"
 									>
 										회원가입
-										<v-icon dense align-content-center>mdi-account-plus</v-icon>
 									</v-list-item-title>
 								</v-list-item-content>
 							</v-list-item>
@@ -110,11 +89,8 @@
 				<div v-else>
 					<v-menu bottom left>
 						<template v-slot:activator="{ on, attrs }">
-							<v-btn dark icon v-bind="attrs" v-on="on" align-center>
-								<v-avatar size="45px">
-									<img v-bind:src="profileImg" />
-									<v-icon></v-icon>
-								</v-avatar>
+							<v-btn dark icon v-bind="attrs" v-on="on">
+								<v-icon size="xx-large" color="green">mdi-account-check</v-icon>
 							</v-btn>
 						</template>
 						<v-list dense nav>
@@ -125,11 +101,9 @@
 							>
 								<v-list-item-content>
 									<v-list-item-title
-										align-center
 										style="font-size : medium; text-align : center"
-										>내 정보<v-icon dense align-content-center class="ml-1"
-											>mdi-information</v-icon
-										>
+										>내 정보
+										<v-icon large color="white">mdi-information</v-icon>
 									</v-list-item-title>
 								</v-list-item-content>
 							</v-list-item>
@@ -140,12 +114,10 @@
 							>
 								<v-list-item-content>
 									<v-list-item-title
-										align-center
 										@click="userLogout"
 										style="font-size : medium; text-align : center"
-										>로그아웃<v-icon dense align-content-center
-											>mdi-logout</v-icon
-										>
+										>로그아웃
+										<v-icon>mdi-logout</v-icon>
 									</v-list-item-title>
 								</v-list-item-content>
 							</v-list-item>
@@ -158,29 +130,30 @@
 		<v-main>
 			<router-view></router-view>
 		</v-main>
-
 		<v-bottom-navigation height="60" style="" color="#ff6d00" fixed>
 			<v-btn :to="{ name: 'Home' }">
 				<span style="color : #00000099; font-size : medium">홈</span>
 				<v-icon large>mdi-home</v-icon>
 			</v-btn>
-			<div v-if="jwt">
-				<v-btn>
+			<div v-if="loginflag">
+				<v-btn :to="{ name: 'ChatList' }">
 					<span style="color : #00000099;  font-size : medium">채팅</span>
-					<v-icon large color="yellow">mdi-chat</v-icon>
+					<v-icon large>mdi-chat</v-icon>
 				</v-btn>
 			</div>
 
-			<div v-if="jwt">
+			<v-btn :to="{ name: 'Search' }">
+				<span style="color : #00000099; font-size : medium">검색</span>
+				<v-icon large>mdi-shopping-search</v-icon>
+			</v-btn>
+
+			<div v-if="loginflag">
 				<v-btn :to="{ name: 'Create' }">
 					<span style="color : #00000099; font-size : medium">중고거래</span>
 					<v-icon large color="blue">mdi-plus-circle-outline</v-icon>
 				</v-btn>
 			</div>
-			<v-btn :to="{ name: 'Search' }">
-				<span style="color : #00000099; font-size : medium">검색</span>
-				<v-icon large color="green">mdi-shopping-search</v-icon>
-			</v-btn>
+
 			<!-- <div v-if="loginflag">
 				<v-btn @click="overlay = !overlay">
 					<span style="color : #00000099; font-size : medium">카카오톡</span>
@@ -197,55 +170,55 @@
 </template>
 
 <script>
-// window.kakaoAsyncInit = function() {
-// 	Kakao.Channel.createAddChannelButton({
-// 		container: '#kakao-talk-channel-add-button',
-// 	});
-// };
-
-// (function(d, s, id) {
-// 	var js,
-// 		fjs = d.getElementsByTagName(s)[0];
-// 	if (d.getElementById(id)) return;
-// 	js = d.createElement(s);
-// 	js.id = id;
-// 	js.src = 'https://developers.kakao.com/sdk/js/kakao.channel.min.js';
-// 	fjs.parentNode.insertBefore(js, fjs);
-// })(document, 'script', 'kakao-js-sdk');
-
+window.kakaoAsyncInit = function() {
+	Kakao.Channel.createAddChannelButton({
+		container: '#kakao-talk-channel-add-button',
+	});
+};
+(function(d, s, id) {
+	var js,
+		fjs = d.getElementsByTagName(s)[0];
+	if (d.getElementById(id)) return;
+	js = d.createElement(s);
+	js.id = id;
+	js.src = 'https://developers.kakao.com/sdk/js/kakao.channel.min.js';
+	fjs.parentNode.insertBefore(js, fjs);
+})(document, 'script', 'kakao-js-sdk');
 import { mapState, mapActions } from 'vuex';
-
 export default {
 	data: () => ({
 		overlay: false,
 		openMenu: false,
+		loginflag: false,
 	}),
-
+	mounted() {},
 	computed: {
 		...mapState({
-			isLogin: (state) => state.auth.isLogin,
-			isLoginError: (state) => state.auth.isLoginError,
-			userInfo: (state) => state.auth.userInfo,
-			profileImg: (state) => state.auth.profileImg,
-			jwt: (state) => state.auth.jwt,
-			likeCount: (state) => state.auth.likeCount,
+			isLogin: (state) => state.users.isLogin,
+			isLoginError: (state) => state.users.isLoginError,
 		}),
 	},
-	mounted() {},
+	mounted() {
+		this.loginCheck();
+	},
 	methods: {
-		...mapActions({
-			getUserLogout: 'auth/getUserLogout',
-			postUserLogin: 'auth/postUserLogin',
-		}),
+		loginCheck() {
+			if (!localStorage.getItem('user')) {
+				this.loginflag = false;
+			} else {
+				this.loginflag = true;
+			}
+		},
 		userLogout() {
-			const jwt = localStorage.getItem('jwt');
-			this.getUserLogout(jwt).then(() => {
+			this.getUserLogout().then(() => {
+				this.isLoading = false;
 				localStorage.removeItem('user');
-				localStorage.removeItem('jwt');
-				localStorage.removeItem('likeCount');
 				this.$router.push({ name: 'UserLogin' });
 			});
 		},
+		...mapActions({
+			getUserLogout: 'auth/getUserLogout',
+		}),
 	},
 };
 </script>

@@ -13,6 +13,7 @@ const UserLike = () => import('../views/UserLike.vue');
 const Search = () => import('../views/Search.vue');
 const Empty = () => import('../components/empty/empty.vue');
 const Chat = () => import('../views/Chat.vue');
+const ChatList = () => import('../views/ChatList.vue');
 const routes = [
 	{
 		path: '/',
@@ -43,6 +44,11 @@ const routes = [
 		path: '/chat',
 		name: 'Chat',
 		component: Chat,
+	},
+	{
+		path: '/chat/list',
+		name: 'ChatList',
+		component: ChatList,
 	},
 	{
 		path: '/user',
