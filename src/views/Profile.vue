@@ -31,7 +31,7 @@
 									<v-list-item three-line>
 										<v-list-item-content>
 											<div class="overline mb-4">
-												email : {{ userInfo.email | stringLowerFormate }}
+												email : {{ userInfo.email }}
 											</div>
 											<div class="overline mb-4">
 												닉네임 : {{ userInfo.nickname }}
@@ -136,7 +136,13 @@
 														>{{ item.price | moneyFilter }} 원
 													</v-list-item-subtitle>
 													<v-card-actions class="ml-16">
-														<v-btn outlined rounded text color="orange">
+														<v-btn
+															@click="detailPush(item.id)"
+															outlined
+															rounded
+															text
+															color="orange"
+														>
 															상세보기
 														</v-btn>
 														<v-btn outlined rounded text color="orange">
@@ -234,6 +240,9 @@ export default {
 						this.$router.push(this.$route.query.redirect || '/user/login');
 					}
 				});
+		},
+		detailPush(id) {
+			this.$router.push({ name: 'BoardDetail', params: { id: id } });
 		},
 		...mapActions({
 			getUserLogout: 'auth/getUserLogout',

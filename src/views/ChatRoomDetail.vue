@@ -64,6 +64,7 @@
 import axios from 'axios';
 import Stomp from 'stomp-websocket';
 import SockJS from 'sockjs-client';
+import Formatter from '@/mixin/Formatter';
 
 // var reconnect = 0;
 const WAS_URL = process.env.VUE_APP_WAS;
@@ -72,7 +73,7 @@ let ws = Stomp.over(socket);
 
 export default {
 	// websocket & stomp initialize
-
+	mixins: [Formatter],
 	// vue.js
 	data() {
 		return {
@@ -82,7 +83,8 @@ export default {
 			message: '',
 			messages: [],
 			token: '',
-			userCount: 0,
+			nickname: '',
+			// userCount: 0,
 			connected: null,
 		};
 	},
@@ -93,10 +95,17 @@ export default {
 
 		this.userId = localStorage.getItem('loginUserId');
 		this.token = localStorage.getItem('jwt');
-		var _this = this;
-		this.init2();
+	},
 
-		// var _this = this;
+	async created() {
+		this.roomId = localStorage.getItem('wschat.roomId');
+		this.roomName = localStorage.getItem('wschat.roomName');
+		this.userId = localStorage.getItem('loginUserId');
+		this.token = localStorage.getItem('jwt');
+		var _this = this;
+		await this.findAllMessage2();
+		await this.connect();
+		await this.findAllMessage2();
 		// axios
 		// 	.get(WAS_URL + '/chat/user', {
 		// 		headers: {
@@ -110,20 +119,16 @@ export default {
 		// 			{ token: localStorage.getItem('jwt') },
 		// 			function(frame) {
 		// 				console.log('소켓 연결 성공', frame);
-		// 				_this.sendMessage('ENTER');
+
 		// 				ws.subscribe(
-		// 					WAS_URL +
-		// 						'/sub/chat/room/' +
-		// 						localStorage.getItem('wschat.roomId'),
+		// 					'/sub/chat/room/' + localStorage.getItem('wschat.roomId'),
 		// 					(message) => {
 		// 						console.log(message);
 		// 						var recv = JSON.parse(message.body);
-		// 						console.log('되는거야');
 		// 						_this.recvMessage(recv);
-		// 						console.log('마는거야');
 		// 					}
 		// 				);
-		// 				// _this.sendMessage('ENTER');
+		// 				_this.sendMessage('ENTER');
 		// 			},
 		// 			function(error) {
 		// 				alert('서버 연결에 실패 하였습니다. 다시 접속해 주십시요.');
@@ -133,80 +138,12 @@ export default {
 		// 		console.log('ws connect 끝');
 		// 	});
 	},
-
-	created() {
-		this.roomId = localStorage.getItem('wschat.roomId');
-		this.roomName = localStorage.getItem('wschat.roomName');
-
-		this.userId = localStorage.getItem('loginUserId');
-		this.token = localStorage.getItem('jwt');
-		var _this = this;
-	},
 	methods: {
-		async init2() {
-			await this.findAllMessage2();
-			await this.connect();
-			await this.findAllMessage2();
-		},
-		init() {
-			var _this = this;
-			console.log('시작~~~');
-			axios
-				.get(WAS_URL + '/chat/user', {
-					headers: {
-						token: localStorage.getItem('jwt'),
-					},
-				})
-				.then((response) => {
-					console.log('ws connect 해보자~');
-
-					ws.connect(
-						{ token: localStorage.getItem('jwt') },
-						function(frame) {
-							console.log('소켓 연결 성공', frame);
-							ws.subscribe(
-								WAS_URL +
-									'/sub/chat/room/' +
-									localStorage.getItem('wschat.roomId'),
-								(message) => {
-									console.log(message);
-									var recv = JSON.parse(message.body);
-									console.log('되는거야');
-									_this.recvMessage(recv);
-									console.log('마는거야');
-								}
-							);
-							_this.sendMessage('ENTER');
-							_this.findAllMessage2();
-						},
-						function(error) {
-							alert('서버 연결에 실패 하였습니다. 다시 접속해 주십시요.');
-							// location.href = 'http://localhost:8080/chat/room';
-						}
-					);
-					console.log('ws connect 끝');
-				});
-		},
 		findAllMessage2() {
 			let path = localStorage.getItem('wschat.roomId');
-			console.log('나의 채팅메시지 불러오기');
-			console.log(localStorage.getItem('wschat.roomId'));
+
 			axios.get(WAS_URL + '/chat/room/enter/' + path).then((response) => {
 				this.messages = response.data;
-				console.log(response);
-				console.log(response.data);
-				console.log('채팅방메시지ㅋㅋㅋㅋ');
-			});
-		},
-		findAllMessage: function() {
-			let path = localStorage.getItem('wschat.roomId');
-			console.log('나의 채팅메시지 불러오기');
-			console.log(localStorage.getItem('wschat.roomId'));
-			axios.get(WAS_URL + '/chat/room/enter/' + path).then((response) => {
-				this.messages = response.data;
-				console.log(response);
-				console.log(response.data);
-				console.log('채팅방메시지ㅋㅋㅋㅋ');
 			});
 		},
 		connect() {
@@ -215,6 +152,15 @@ export default {
 				{ token: localStorage.getItem('jwt') },
 				function(frame) {
 					console.log('소켓 연결 성공', frame);
+					ws.subscribe(
+						'/sub/chat/room/' + localStorage.getItem('wschat.roomId'),
+						(message) => {
+							console.log(message);
+							var recv = JSON.parse(message.body);
+							console.log('@@@@@@@@@@@@@여기는 리시브 시작지점');
+							_this.recvMessage(recv);
+						}
+					);
 					_this.sendMessage('ENTER');
 				},
 				function(error) {
@@ -223,9 +169,9 @@ export default {
 				}
 			);
 		},
-		sendMessage: async function(type) {
-			console.log('채팅 보내기 시작!!!!!!!!');
-			await ws.send(
+		sendMessage: function(type) {
+			console.log('여긴들어왔니?');
+			ws.send(
 				'/pub/chat/message',
 				{ token: localStorage.getItem('jwt') },
 				JSON.stringify({
@@ -237,22 +183,107 @@ export default {
 					message: this.message,
 				})
 			);
+			var recv = {
+				type: type,
+				sender: localStorage.getItem('nickname'),
+				message: this.message,
+				userId: {
+					id: localStorage.getItem('loginUserId'),
+				},
+			};
+			this.recvMessage(recv);
 			this.findAllMessage2();
-			console.log('채팅 보내기 끝!!!!!!!!');
+
 			this.message = '';
 		},
 
-		recvMessage: function(recv) {
-			console.log('리시브 내놔!!!!!');
-			console.log(recv);
-			this.userCount = recv.userCount;
-			this.messages.unshift({
+		recvMessage(recv) {
+			// var type2 = '';
+			// if (recv.type == 0) {
+			// 	type2 = 'ENTER';
+			// } else if (recv.type == 1) {
+			// 	type2 = 'QUIT';
+			// } else {
+			// 	type2 = 'TALK';
+			// }
+			console.log(recv.type);
+			console.log('@@리시브 확인');
+			// this.userCount = recv.userCount;
+			// this.messages.unshift({
+			// 	type: recv.type,
+			// 	sender: recv.sender,
+			// 	message: recv.message,
+			// 	userId: recv.userId,
+			// });
+			this.messages.push({
 				type: recv.type,
 				sender: recv.sender,
 				message: recv.message,
 				userId: recv.userId,
 			});
+			this.message = '';
 		},
+		// recvMessage: function(recv) {
+		// 	console.log('리시브 내놔!!!!!');
+		// 	console.log(recv);
+		// 	this.userCount = recv.userCount;
+		// 	this.messages.unshift({
+		// 		type: recv.type,
+		// 		sender: recv.sender,
+		// 		message: recv.message,
+		// 		userId: recv.userId,
+		// 	});
+		// 	this.findAllMessage2();
+		// },
+		// init() {
+		// 	var _this = this;
+		// 	console.log('시작~~~');
+		// 	axios
+		// 		.get(WAS_URL + '/chat/user', {
+		// 			headers: {
+		// 				token: localStorage.getItem('jwt'),
+		// 			},
+		// 		})
+		// 		.then((response) => {
+		// 			console.log('ws connect 해보자~');
+
+		// 			ws.connect(
+		// 				{ token: localStorage.getItem('jwt') },
+		// 				function(frame) {
+		// 					console.log('소켓 연결 성공', frame);
+		// 					ws.subscribe(
+		// 						'/sub/chat/room/' + localStorage.getItem('wschat.roomId'),
+		// 						(message) => {
+		// 							console.log(message);
+		// 							var recv = JSON.parse(message.body);
+		// 							console.log('되는거야');
+		// 							_this.recvMessage(recv);
+		// 							console.log('마는거야');
+		// 						}
+		// 					);
+		// 					_this.sendMessage('ENTER');
+		// 					_this.findAllMessage2();
+		// 				},
+		// 				function(error) {
+		// 					alert('서버 연결에 실패 하였습니다. 다시 접속해 주십시요.');
+		// 					// location.href = 'http://localhost:8080/chat/room';
+		// 				}
+		// 			);
+		// 			console.log('ws connect 끝');
+		// 		});
+		// },
+
+		// findAllMessage: function() {
+		// 	let path = localStorage.getItem('wschat.roomId');
+		// 	console.log('나의 채팅메시지 불러오기');
+		// 	console.log(localStorage.getItem('wschat.roomId'));
+		// 	axios.get(WAS_URL + '/chat/room/enter/' + path).then((response) => {
+		// 		this.messages = response.data;
+		// 		console.log(response);
+		// 		console.log(response.data);
+		// 		console.log('채팅방메시지ㅋㅋㅋㅋ');
+		// 	});
+		// },
 	},
 };
 </script>

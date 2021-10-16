@@ -230,7 +230,7 @@ export default {
 			gender: '',
 
 			rules: {
-				required: (input) => !input || '이메일을 입력해주십시오.',
+				required: (input) => !!input || 'Required',
 				minPw: (password) => password.length >= 8 || 'Min 8 characters',
 				minName: (Name) => Name.length >= 1 || 'Min 1 characters',
 				minNickname: (nickName) => nickName.length >= 1 || 'Min 1 characters',

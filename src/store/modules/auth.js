@@ -8,6 +8,7 @@ const state = {
 	isLogin: false,
 	isLoginError: false,
 	likeCount: 0,
+	nickname: '',
 };
 
 const getters = {};
@@ -67,6 +68,7 @@ const actions = {
 			.then((res) => {
 				let user = {
 					id: res.id,
+					nickname: res.nickname,
 					email: res.email,
 					userName: res.userName,
 					tel: res.tel,
@@ -79,6 +81,7 @@ const actions = {
 				localStorage.setItem('user', user);
 				localStorage.setItem('loginUserId', user.id);
 				localStorage.setItem('likeCount', user.likeCount);
+				localStorage.setItem('nicname', user.nickname);
 				commit('isLoginedSuccess', user);
 				commit('isLoginedSuccess2', token);
 			})
@@ -104,6 +107,7 @@ const actions = {
 		localStorage.removeItem('token');
 		localStorage.removeItem('likeCount');
 		localStorage.removeItem('loginUserId');
+		localStorage.removeItem('nickname');
 		commit('logoutState');
 		this.$router.push({ name: 'UserLogin' });
 	},
@@ -181,6 +185,7 @@ const mutations = {
 		localStorage.removeItem('user');
 		localStorage.removeItem('likeCount');
 		localStorage.removeItem('loginUserId');
+		localStorage.removeItem('nickname');
 		state.isLogin = false;
 		state.isLoginError = false;
 		state.jwt = '';
