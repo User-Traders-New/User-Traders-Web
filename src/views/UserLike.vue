@@ -1,6 +1,6 @@
 <template>
 	<v-container>
-		<v-card>
+		<v-card class="mt-16 mb-16">
 			<h1 align="center" class="dark--text mb-2">
 				<v-icon size="xx-large" color="#ff7700">mdi-gift</v-icon>
 				<span class="font-36"> 나의 찜 현황 </span>

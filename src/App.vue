@@ -34,7 +34,7 @@
 						align-center
 					>
 						<v-avatar size="45px">
-							<v-icon size="xx-large" color="red">
+							<v-icon size="x-large" color="red">
 								mdi-heart
 							</v-icon>
 							<v-card-text
@@ -42,9 +42,11 @@
 							left:12px;top:5px
 							"
 							>
-								<span style="color:#fa5252" class="font-bold font-weight">{{
-									this.$store.state.auth.likeCount
-								}}</span>
+								<span
+									style="color:#fa5252;font-size:16px"
+									class="font-bold font-weight"
+									>{{ this.$store.state.auth.likeCount }}</span
+								>
 							</v-card-text>
 						</v-avatar>
 					</v-btn>
@@ -97,13 +99,13 @@
 									</v-list-item-title>
 								</v-list-item-content>
 							</v-list-item>
-							<v-list-item
+							<!-- <v-list-item
 								id="kakao-talk-channel-add-button"
 								data-channel-public-id="_paeus"
 								data-size="small"
 								data-support-multiple-densities="true"
 							>
-							</v-list-item>
+							</v-list-item> -->
 						</v-list>
 					</v-menu>
 				</div>
@@ -165,7 +167,7 @@
 				<v-icon large>mdi-home</v-icon>
 			</v-btn>
 			<div v-if="jwt">
-				<v-btn>
+				<v-btn :to="{ name: 'ChatRoom' }">
 					<span style="color : #00000099;  font-size : medium">채팅</span>
 					<v-icon large color="yellow">mdi-chat</v-icon>
 				</v-btn>

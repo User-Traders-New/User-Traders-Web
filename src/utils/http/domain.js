@@ -47,6 +47,6 @@ export default {
 		delete: { task: 'delete', url: '/users/#id' },
 
 		//학과 전체 목록 조회
-		listdepartment: { task: 'get', url: '/departments/list' },
+		listdepartment: { task: 'get', url: '/users/list/department' },
 	},
 };

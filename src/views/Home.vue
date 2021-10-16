@@ -1,5 +1,24 @@
 <template>
 	<div>
+		<div
+			v-if="utc == true"
+			style="display: flex; justify-content: center; align-items: center;"
+		>
+			<div class="" style="display:flex; flex-direction:row">
+				<h1
+					style="font-weight:bold;display: flex; justify-content: center; align-items: center;"
+				>
+					성공회대 중고거래 플랫폼 USER TRADERS
+				</h1>
+				<v-img
+					class="ml-2 mt-1"
+					contain
+					width="33"
+					height="33"
+					src="https://usertradersbucket.s3.ap-northeast-2.amazonaws.com/basic/usertradesicon.ico"
+				></v-img>
+			</div>
+		</div>
 		<v-container v-if="listData" three-line>
 			<v-row class="mt-16">
 				<v-col
@@ -20,6 +39,7 @@
 										{{ item.categoryId.name }}
 									</div>
 									<v-img
+										contain
 										v-bind:src="item.thumbnail"
 										:aspect-ratio="11 / 8"
 										height="mx-auto"
@@ -212,7 +232,8 @@
 			@infinite="infiniteHandler"
 			spinner="waveDots"
 			forceUseInfiniteWrapper
-			><div slot="no-more" class="ma-10">
+		>
+			<div slot="no-more" class="ma-10">
 				더이상 게시물이 존재하지 않습니다.
 			</div>
 			<div slot="no-results" class="ma-10">
@@ -240,6 +261,7 @@ export default {
 		return {
 			limit: 1,
 			listData: [],
+			utc: true,
 		};
 	},
 	components: {
@@ -266,6 +288,7 @@ export default {
 				})
 				.then((res) => {
 					setTimeout(() => {
+						this.utc = false;
 						if (res.boardResponseDtoList.length) {
 							this.listData = this.listData.concat(res.boardResponseDtoList);
 							$state.loaded();
@@ -274,7 +297,7 @@ export default {
 							$state.complete();
 							/*alert("더 이상 목록이 존재하지 않습니다.")*/
 						}
-					}, 1000);
+					}, 2000);
 				})
 				.catch((err) => {
 					console.log(err);

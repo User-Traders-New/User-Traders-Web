@@ -7,6 +7,7 @@ import Alert from './plugins/alert';
 import vuetify from './plugins/vuetify';
 import Vuetify from 'vuetify/lib';
 import Vuelidate from 'vuelidate';
+import './plugins/socketPlugin';
 
 Vue.use(Vuelidate);
 

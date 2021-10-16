@@ -4,6 +4,7 @@ import { EventBus } from '@/event-bus.js';
 import router from '../../router/index.js';
 
 const WAS_URL = process.env.VUE_APP_WAS;
+// const WAS_URL = "http://localhost:8080"
 
 const axiosInstance = axios.create({
 	baseURL: '/',
