@@ -31,7 +31,10 @@
 												v-bind:src="listDataDeatailUserId.imagePath"
 											></v-img>
 										</v-list-item-avatar>
-										<div v-if="listDataDeatailUserId.nickName">
+										<div
+											style="display: flex; justify-content: center; align-items: center;"
+											v-if="listDataDeatailUserId.nickName"
+										>
 											{{ listDataDeatailUserId.nickName }}
 										</div>
 									</div>
@@ -202,14 +205,14 @@
 										mdi-heart
 									</v-icon>
 									{{ listDataDeatail.likeCount }}
-									<v-icon color="blue">
-										mdi-eye-outline
-									</v-icon>
-									{{ listDataDeatail.views }}
 									<v-icon color="yellow">
 										mdi-chat-processing
 									</v-icon>
 									{{ listDataDeatail.chatCount }}
+									<v-icon color="blue">
+										mdi-eye-outline
+									</v-icon>
+									{{ listDataDeatail.views }}
 								</div>
 								<div>
 									<div class="ml-10">
@@ -234,7 +237,24 @@
 												mdi-heart
 											</v-icon>
 										</v-btn>
-										<v-btn color="orange" class="ma-2 white--text pa-5">
+
+										<!-- <input
+													type="text"
+													class="form-control"
+													v-model="room_name"
+													v-on:keyup.enter="createRoom"
+												/> -->
+										<v-btn
+											color="orange"
+											class="ma-2 white--text pa-5"
+											@click="
+												createRoom(
+													listDataDeatail.title,
+													listDataDeatailUserId.id,
+													listDataDeatail.id
+												)
+											"
+										>
 											채팅하기
 											<v-icon color="yellow" class="ml-2">
 												mdi-chat-processing
@@ -409,6 +429,8 @@ import { mapState, mapActions } from 'vuex';
 import http from '@/utils/http';
 import Loading from './loding.vue';
 import Formatter from '@/mixin/Formatter';
+import axios from 'axios';
+import router from '@/router/index.js';
 
 export default {
 	mixins: [Formatter],
@@ -428,6 +450,7 @@ export default {
 				(v) => (v && v.length <= 15) || '댓글은 15자 이하 까지 가능합니다.',
 			],
 			isCommentAdd: false,
+			room_name: '',
 		};
 	},
 
@@ -548,6 +571,45 @@ export default {
 					token: this.token,
 				};
 				await this.getlistUsersBoardsData(payload);
+			}
+		},
+		createRoom: function(title, sellUserId, boardId) {
+			this.room_name = '게시물 제목: ' + title + ' 채팅';
+
+			console.log(this.room_name);
+			if ('' === this.room_name) {
+				alert('방 제목을 입력해 주십시요.');
+				return;
+			} else {
+				// var params = new URLSearchParams();
+				// params.append('name', this.room_name);
+				// params.append('sellUserId', { id: sellUserId });
+				const obj = {
+					name: this.room_name,
+					sellUserId: {
+						id: sellUserId,
+					},
+					boardId: {
+						id: boardId,
+					},
+				};
+
+				axios
+					.post('http://localhost:8090/chat/room', obj, {
+						headers: {
+							token: localStorage.getItem('jwt'),
+						},
+					})
+					.then((response) => {
+						if (confirm('해당 게시물의 회원과 채팅하시겠습니까?')) {
+							alert(response.data.name + '방 개설에 성공하였습니다.');
+							this.room_name = '';
+							this.$router.push({ name: 'ChatRoom' });
+						}
+					})
+					.catch((response) => {
+						alert('채팅방 개설에 실패하였습니다.');
+					});
 			}
 		},
 		...mapActions({

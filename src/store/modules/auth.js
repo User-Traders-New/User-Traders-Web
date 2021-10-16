@@ -77,6 +77,7 @@ const actions = {
 					likeCount: res.likeCount,
 				};
 				localStorage.setItem('user', user);
+				localStorage.setItem('loginUserId', user.id);
 				localStorage.setItem('likeCount', user.likeCount);
 				commit('isLoginedSuccess', user);
 				commit('isLoginedSuccess2', token);
@@ -102,6 +103,7 @@ const actions = {
 		localStorage.removeItem('user');
 		localStorage.removeItem('token');
 		localStorage.removeItem('likeCount');
+		localStorage.removeItem('loginUserId');
 		commit('logoutState');
 		this.$router.push({ name: 'UserLogin' });
 	},
@@ -178,6 +180,7 @@ const mutations = {
 		localStorage.removeItem('jwt');
 		localStorage.removeItem('user');
 		localStorage.removeItem('likeCount');
+		localStorage.removeItem('loginUserId');
 		state.isLogin = false;
 		state.isLoginError = false;
 		state.jwt = '';

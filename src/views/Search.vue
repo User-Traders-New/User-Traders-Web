@@ -29,6 +29,16 @@
 		</div>
 		<!-- 서브 카테고리 오버레이 -->
 		<v-overlay class="mt-16 mb-16" :absolute="absolute" :value="overlay">
+			<v-btn
+				class="ml-3 mb-2"
+				color="blue"
+				@click="
+					() => {
+						overlay = !overlay;
+					}
+				"
+				>나가기</v-btn
+			>
 			<v-col v-for="(item, i) in listCategory" :key="`item-${i}`" cols="auto">
 				<v-btn color="orange" @click="searchCategory2(item.id)"
 					>{{ item.name }}

@@ -12,6 +12,8 @@ const Profile = () => import('../views/Profile.vue');
 const UserLike = () => import('../views/UserLike.vue');
 const Search = () => import('../views/Search.vue');
 const Empty = () => import('../components/empty/empty.vue');
+const ChatRoomDetail = () => import('../views/ChatRoomDetail.vue');
+const ChatRoom = () => import('../views/ChatRoom.vue');
 const routes = [
 	// 홈
 	{
@@ -38,6 +40,17 @@ const routes = [
 		path: '/search',
 		name: 'Search',
 		component: Search,
+	},
+	//*****************채팅 */
+	{
+		path: '/chat/room/enter/:roomId',
+		name: 'ChatRoomDetail',
+		component: ChatRoomDetail,
+	},
+	{
+		path: '/chat/room',
+		name: 'ChatRoom',
+		component: ChatRoom,
 	},
 	//회원
 	{
@@ -75,6 +88,11 @@ const routes = [
 		redirect: { name: 'Home' },
 	},
 ];
+const BASE_URL = 'http://localhost:8080';
+console.log('@@@@@@@@@이게 남나');
+console.log(process.env.BASE_URL);
+console.log(BASE_URL);
+console.log('@@@@@@@@@이게 남나~~~@@@');
 
 const router = new VueRouter({
 	mode: 'history',
