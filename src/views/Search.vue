@@ -331,10 +331,10 @@
 															mdi-eye-outline
 														</v-icon>
 														{{ item.views }}
-														<v-icon color="yellow">
+														<!-- <v-icon color="yellow">
 															mdi-chat-processing
 														</v-icon>
-														{{ item.chatCount }}
+														{{ item.chatCount }} -->
 													</div>
 												</div>
 											</v-card-text>

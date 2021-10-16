@@ -2,7 +2,7 @@
 	<div class="mt-16">
 		<div v-if="listDataDeatail">
 			<v-row class="fill-height mt-5 mb-16" align="center" justify="center">
-				<v-card class="pa-2" tile flat>
+				<v-card width="360px" class="pa-2" tile flat>
 					<!-- 이미지 -->
 					<div>
 						<v-carousel progress-color="orange">
@@ -174,7 +174,10 @@
 								</div>
 							</v-card-text>
 							<v-card-text class="mt-2 pa-3">
-								<div class="font-weight-medium" style="font-size:large;">
+								<div
+									class="font-weight-medium"
+									style="display: block;font-size:large;"
+								>
 									{{ listDataDeatail.content }}
 								</div>
 							</v-card-text>
@@ -205,10 +208,10 @@
 										mdi-heart
 									</v-icon>
 									{{ listDataDeatail.likeCount }}
-									<v-icon color="yellow">
+									<!-- <v-icon color="yellow">
 										mdi-chat-processing
 									</v-icon>
-									{{ listDataDeatail.chatCount }}
+									{{ listDataDeatail.chatCount }} -->
 									<v-icon color="blue">
 										mdi-eye-outline
 									</v-icon>
@@ -376,8 +379,6 @@
 										<v-col
 											v-for="(item, i) in listUsersBoardsData"
 											:key="`item-${i}`"
-											cols="12"
-											sm="4"
 										>
 											<div @click="detailPush(item.id)">
 												<v-card max-width="344">
@@ -431,6 +432,8 @@ import Loading from './loding.vue';
 import Formatter from '@/mixin/Formatter';
 import axios from 'axios';
 import router from '@/router/index.js';
+
+const WAS_URL = process.env.VUE_APP_WAS;
 
 export default {
 	mixins: [Formatter],
@@ -595,7 +598,7 @@ export default {
 				};
 
 				axios
-					.post('http://localhost:8090/chat/room', obj, {
+					.post(WAS_URL + '/chat/room', obj, {
 						headers: {
 							token: localStorage.getItem('jwt'),
 						},

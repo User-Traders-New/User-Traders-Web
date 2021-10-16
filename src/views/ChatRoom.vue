@@ -1,17 +1,17 @@
 <template>
 	<div class="container" id="app" v-cloak>
-		<v-card width="360" height="mx-auto" class="mx-auto mt-8 ">
+		<v-card width="400" height="mx-auto" class="mx-auto mt-8 mb-8">
 			<div class="row mb-6">
 				<div
-					class="row ml-3"
+					class="row ml-3 mr-3 mt-3"
 					style="border-bottom:solid; border-width:0.5px; border-color: lightgray;"
 				>
 					<v-icon color="yellow" class="ml-2">
 						mdi-chat-processing
 					</v-icon>
-					<h3>
+					<h2>
 						채팅
-					</h3>
+					</h2>
 				</div>
 			</div>
 			<!-- <div class="input-group">
@@ -36,38 +36,43 @@
 					<v-card-text
 						class="list-group-item list-group-item-action"
 						style="border-bottom:solid; border-width:0.5px; border-color: lightgray;"
-						v-for="item in chatrooms"
-						v-bind:key="item.id"
+						v-for="(item, index) in chatrooms"
+						v-bind:key="index"
 						v-on:click="enterRoom(item.roomId, item.name)"
 					>
 						<v-row v-if="item" class="mt-3 mb-3 pb-3 pb-3">
-							<v-list-item-avatar class="ml-3" style="">
-								<!-- 프로필 사진 적용 -->
-								<v-img
-									v-if="item.boardId"
-									v-bind:src="item.boardId.userId.imagePath"
-								></v-img>
-							</v-list-item-avatar>
-							<v-col width="1000" style="text-align:left;">
-								<div>
+							{{ index + 1 }}
+							<div>
+								<v-list-item-avatar class="ml-3" style="">
+									<!-- 프로필 사진 적용 -->
+									<v-img
+										v-if="item.boardId"
+										v-bind:src="item.boardId.userId.imagePath"
+									></v-img>
+								</v-list-item-avatar>
+								<div
+									style="display: flex; justify-content: center; align-items: center;"
+								>
 									<!-- 닉네임 적용 -->
-									<h4 style="color:grey">
+									<div style="color:grey">
 										{{ item.sellUserId.nickname }}
-									</h4>
+									</div>
 								</div>
+							</div>
+
+							<v-col style="text-align:left;">
 								<div>
+									<h3>{{ item.name }}</h3>
 									<!-- 최근 채팅 메시지 표시 -->
-									<h5>{{ item.name }}</h5>
+								</div>
+								<div style="color:#ff892e" class="mt-1">
+									<!-- 최근채팅 > -->
 								</div>
 							</v-col>
-							<v-col
-								align-center
-								justify-center
-								style="margin-right:4%;  text-align : right;"
-							>
+							<div class="mr-3 mt-3">
 								<!-- 메시지 도착 시점의 시간,날짜 표시 -->
 								{{ item.createAt | timeForToday }}
-							</v-col>
+							</div>
 						</v-row>
 					</v-card-text>
 				</div>
@@ -89,6 +94,7 @@ export default {
 		return {
 			room_name: '',
 			chatrooms: [],
+			indexToroomId: [],
 		};
 	},
 	created() {
@@ -98,6 +104,9 @@ export default {
 	methods: {
 		init() {
 			this.findAllRoom();
+			// for (let index = 0; index < chatrooms.length; index++) {
+			// 	this.indexToroomId[index] = chatrooms[index].roomId;
+			// }
 		},
 		findAllRoom: function() {
 			console.log('나의 채팅방 목록 불러오기');
