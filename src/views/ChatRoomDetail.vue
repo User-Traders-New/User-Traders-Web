@@ -65,6 +65,7 @@ import axios from 'axios';
 import Stomp from 'stomp-websocket';
 import SockJS from 'sockjs-client';
 import Formatter from '@/mixin/Formatter';
+import { mapState, mapActions } from 'vuex';
 
 // var reconnect = 0;
 const WAS_URL = process.env.VUE_APP_WAS;
@@ -86,15 +87,42 @@ export default {
 			nickname: '',
 			// userCount: 0,
 			connected: null,
+			messageCount: 0,
 		};
 	},
+	computed: {
+		// ...mapState({
+		// 	isLogin: (state) => state.auth.isLogin,
+		// 	isLoginError: (state) => state.auth.isLoginError,
+		// 	userInfo: (state) => state.auth.userInfo,
+		// 	profileImg: (state) => state.auth.profileImg,
+		// 	jwt: (state) => state.auth.jwt,
+		// 	likeCount: (state) => state.auth.likeCount,
+		// }),
+	},
+	// watch: {
+	// 	$route: {
+	// 		handler() {
+	// 			this.findAllMessage2();
+	// 			this.connect();
+	// 			this.findAllMessage2();
+	// 		},
+	// 	},
+	// },
+	// async updated() {
+	// 	await this.findAllMessage2();
+	// 	await this.connect();
+	// 	await this.findAllMessage2();
+	// },
 
-	mounted() {
+	async mounted() {
 		this.roomId = localStorage.getItem('wschat.roomId');
 		this.roomName = localStorage.getItem('wschat.roomName');
-
 		this.userId = localStorage.getItem('loginUserId');
 		this.token = localStorage.getItem('jwt');
+		await this.findAllMessage2();
+		await this.connect();
+		await this.findAllMessage2();
 	},
 
 	async created() {
@@ -147,29 +175,38 @@ export default {
 			});
 		},
 		connect() {
-			var _this = this;
-			ws.connect(
-				{ token: localStorage.getItem('jwt') },
-				function(frame) {
-					console.log('소켓 연결 성공', frame);
-					ws.subscribe(
-						'/sub/chat/room/' + localStorage.getItem('wschat.roomId'),
-						(message) => {
-							console.log(message);
-							var recv = JSON.parse(message.body);
-							console.log('@@@@@@@@@@@@@여기는 리시브 시작지점');
-							_this.recvMessage(recv);
+			axios
+				.get(WAS_URL + '/chat/user', {
+					headers: {
+						token: localStorage.getItem('jwt'),
+					},
+				})
+				.then((response) => {
+					var _this = this;
+					ws.connect(
+						{ token: localStorage.getItem('jwt') },
+						function(frame) {
+							console.log('소켓 연결 성공', frame);
+							ws.subscribe(
+								'/sub/chat/room/' + localStorage.getItem('wschat.roomId'),
+								(message) => {
+									console.log(message);
+									var recv = JSON.parse(message.body);
+									console.log('@@@@@@@@@@@@@여기는 리시브 시작지점');
+									_this.recvMessage(recv);
+								}
+							);
+							_this.sendMessage('ENTER');
+						},
+						function(error) {
+							alert('서버 연결에 실패 하였습니다. 다시 접속해 주십시요.');
+							// location.href = 'http://localhost:8080/chat/room';
 						}
 					);
-					_this.sendMessage('ENTER');
-				},
-				function(error) {
-					alert('서버 연결에 실패 하였습니다. 다시 접속해 주십시요.');
-					// location.href = 'http://localhost:8080/chat/room';
-				}
-			);
+					this.findAllMessage2();
+				});
 		},
-		sendMessage: function(type) {
+		sendMessage: async function(type) {
 			console.log('여긴들어왔니?');
 			ws.send(
 				'/pub/chat/message',
@@ -191,13 +228,14 @@ export default {
 					id: localStorage.getItem('loginUserId'),
 				},
 			};
-			this.recvMessage(recv);
-			this.findAllMessage2();
+			await this.findAllMessage2();
+			await this.recvMessage(recv);
+			await this.findAllMessage2();
 
 			this.message = '';
 		},
 
-		recvMessage(recv) {
+		async recvMessage(recv) {
 			// var type2 = '';
 			// if (recv.type == 0) {
 			// 	type2 = 'ENTER';
@@ -222,6 +260,7 @@ export default {
 				userId: recv.userId,
 			});
 			this.message = '';
+			await this.findAllMessage2();
 		},
 		// recvMessage: function(recv) {
 		// 	console.log('리시브 내놔!!!!!');

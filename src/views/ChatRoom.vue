@@ -1,6 +1,6 @@
 <template>
 	<div class="container" id="app" v-cloak>
-		<v-card width="400" height="mx-auto" class="mx-auto mt-8 mb-8">
+		<v-card width="400" height="mx-auto" class="mx-auto mt-16 mb-16">
 			<div class="row mb-6">
 				<div
 					class="row ml-3 mr-3 mt-3"
@@ -66,6 +66,12 @@
 									<!-- 최근 채팅 메시지 표시 -->
 								</div>
 								<div style="color:#ff892e" class="mt-1">
+									<!-- 최근채팅 > -->
+								</div>
+								<div style="color:gray" class="mt-1">
+									판매자: {{ item.sellUserId.nickname }} / 구매자:{{
+										item.buyUserId.nickname
+									}}
 									<!-- 최근채팅 > -->
 								</div>
 							</v-col>
