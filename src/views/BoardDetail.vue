@@ -269,15 +269,15 @@
 									</div>
 								</div>
 								<div fixed class="ml-7" style="display:flex;flex-direction:row">
-									<v-form>
-										<v-text-field
-											v-model="commented"
-											counter="15"
-											autocomplete="off"
-											label="댓글"
-											prepend-icon="mdi-comment-text-multiple"
-										></v-text-field>
-									</v-form>
+									<v-text-field
+										v-model="commented"
+										counter="15"
+										autocomplete="off"
+										label="댓글"
+										prepend-icon="mdi-comment-text-multiple"
+										@keyup.enter="Sendcommented(commented, listDataDeatail.id)"
+									></v-text-field>
+
 									<v-card-actions
 										@click="Sendcommented(commented, listDataDeatail.id)"
 									>
@@ -577,6 +577,11 @@ export default {
 			}
 		},
 		createRoom: function(title, sellUserId, boardId) {
+			if (sellUserId == localStorage.getItem('loginUserId')) {
+				alert('자기 자신과는 채팅할 수 없습니다.');
+				return;
+			}
+
 			this.room_name = '게시물 제목: ' + title + ' 채팅';
 
 			console.log(this.room_name);

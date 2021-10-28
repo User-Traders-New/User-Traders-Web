@@ -101,25 +101,46 @@ export default {
 					});
 				});
 		},
-		...mapActions({
-			getUserLogout: 'auth/getUserLogout',
-		}),
+
 		likeAddDelete(idx, id) {
 			this.cartList.splice(idx, 1);
-			const jwt = localStorage.getItem('jwt');
-			return http
-				.process('boards', 'like', { boardId: { id: id } }, { token: jwt })
+			let payload = {
+				id: id,
+				token: localStorage.getItem('jwt'),
+			};
+
+			this.likeAddDelete2(payload)
 				.then((res) => {
 					console.log(res);
+
+					if (
+						res.message !=
+						id + '번 게시물을 장바구니에 담기 취소에 성공하였습니다.'
+					) {
+						if (
+							confirm(
+								'해당 게시물을 찜 하였습니다. 장바구니로 이동하시겠습니까?'
+							)
+						) {
+							this.$router.push({ name: 'UserLike' });
+						}
+					}
 					this.init();
 				})
 				.catch((err) => {
 					console.log(err);
+					this.$router.push({ name: 'UserLogin' });
 				});
 		},
+
 		detailPush(id) {
 			this.$router.push({ name: 'BoardDetail', params: { id: id } });
 		},
+
+		...mapActions({
+			likeAddDelete2: 'auth/likeAddDelete2',
+			getUserLogout: 'auth/getUserLogout',
+		}),
 	},
 
 	computed: {
