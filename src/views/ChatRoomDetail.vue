@@ -4,7 +4,7 @@
 		<br />
 		<br />
 		<v-card
-			width="500px"
+			width="600px"
 			height="mx-auto"
 			class="mx-auto "
 			style="margin-bottom : 80px"
@@ -17,16 +17,15 @@
 					<div class="ml-2">
 						<h4>{{ roomName }}</h4>
 					</div>
-					<div class="ml-2" style="font-size:10px">
+					<!-- <div class="ml-2" style="font-size:9px">
 						[↓ 날짜순 ↓]
-					</div>
-					<div>
-						<span class="ml-12" style="	font-size:11px; color:red">
-							{{
-								messages[0].userCount == 2 ? '상대방 입장중' : '상대방 퇴장중'
-							}}</span
+					</div> -->
+					<div v-if="userCount">
+						<span class="ml-1" style="	font-size:11px; color:red; float:right">
+							{{ userCount == 2 ? '상대방 입장중' : '상대방 퇴장중' }}</span
 						>
 					</div>
+					<div v-else></div>
 				</div>
 			</v-card-title>
 
@@ -175,7 +174,7 @@ export default {
 			messages: [],
 			token: '',
 			nickname: '',
-			// userCount: 0,
+			userCount: 0,
 			connected: null,
 			messageCount: 0,
 			basicNickname: '[알림]',
@@ -338,7 +337,7 @@ export default {
 			// }
 			console.log(recv.type);
 			console.log('@@리시브 확인');
-			// this.userCount = recv.userCount;
+			this.userCount = recv.userCount;
 			// this.messages.unshift({
 			// 	type: recv.type,
 			// 	sender: recv.sender,
