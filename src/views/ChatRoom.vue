@@ -63,7 +63,11 @@
 								>
 									<!-- 닉네임 적용 -->
 									<div style="font-size:13px;">
-										{{ item.sellUserId.nickname }}
+										{{
+											item.sellUserId
+												? item.sellUserId.nickname
+												: '닉네임이 없습니다.'
+										}}
 									</div>
 								</div>
 							</div>
