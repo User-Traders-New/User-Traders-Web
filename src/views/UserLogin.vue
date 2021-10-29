@@ -93,7 +93,8 @@ export default {
 			this.$refs.form.validate();
 		},
 		reset() {
-			this.$refs.form.reset();
+			alert('아직 비밀번호 찾기는 개발 예정 입니다.');
+			// this.$refs.form.reset();
 		},
 		loginSubmit() {
 			const loginObj = { email: this.email, password: this.password };

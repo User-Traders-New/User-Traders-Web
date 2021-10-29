@@ -49,10 +49,10 @@
 									</v-list-item>
 
 									<v-card-actions>
-										<v-btn outlined rounded text>
+										<v-btn @click="alertOne" outlined rounded text>
 											회원정보 수정
 										</v-btn>
-										<v-btn outlined rounded text>
+										<v-btn @click="alertOne" outlined rounded text>
 											회원 탈퇴
 										</v-btn>
 									</v-card-actions>
@@ -99,11 +99,11 @@
 										cols="12"
 										sm="4"
 									>
-										<v-card class="mx-auto" max-width="344" outlined>
+										<v-card class="mx-auto " max-width="360" outlined>
 											<v-list-item three-line>
 												<div style="display:flex; flex-direction:row">
 													<div>
-														<v-list-item-avatar tile size="120" color="grey">
+														<v-list-item-avatar tile size="150" color="grey">
 															<v-img v-bind:src="item.thumbnail"> </v-img>
 														</v-list-item-avatar>
 													</div>
@@ -125,17 +125,17 @@
 											</v-list-item>
 											<v-list-item
 												><div>
-													<v-list-item-title class="headline mb-1">
+													<v-list-item-title class="headline mb-3 mr-3">
 														{{ item.title }}
 													</v-list-item-title>
 												</div></v-list-item
 											>
 											<v-list-item
 												><div style="display:flex;flex-direction:row">
-													<v-list-item-subtitle class="mr-10"
+													<v-list-item-subtitle class="mr-6"
 														>{{ item.price | moneyFilter }} 원
 													</v-list-item-subtitle>
-													<v-card-actions class="ml-16">
+													<v-card-actions class="mr-4 pr-4">
 														<v-btn
 															@click="detailPush(item.id)"
 															outlined
@@ -145,8 +145,23 @@
 														>
 															상세보기
 														</v-btn>
-														<v-btn outlined rounded text color="orange">
+														<v-btn
+															@click="alertOne"
+															outlined
+															rounded
+															text
+															color="orange"
+														>
 															수정하기
+														</v-btn>
+														<v-btn
+															@click="alertOne"
+															outlined
+															rounded
+															text
+															color="orange"
+														>
+															삭제하기
 														</v-btn>
 													</v-card-actions>
 												</div></v-list-item
@@ -243,6 +258,9 @@ export default {
 		},
 		detailPush(id) {
 			this.$router.push({ name: 'BoardDetail', params: { id: id } });
+		},
+		alertOne() {
+			alert('아직 개발 예정 중 입니다.');
 		},
 		...mapActions({
 			getUserLogout: 'auth/getUserLogout',

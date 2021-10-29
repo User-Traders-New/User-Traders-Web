@@ -3,11 +3,29 @@
 		<br />
 		<br />
 		<br />
-		<v-card width="360" height="mx-auto" class="mx-auto ">
+		<v-card
+			width="500px"
+			height="mx-auto"
+			class="mx-auto "
+			style="margin-bottom : 80px"
+		>
 			<v-card-title>
-				<div style="">
-					<div class="">
+				<div style="display:flex;flex-direction:row;">
+					<v-icon color="yellow" class="ml-2">
+						mdi-chat-processing
+					</v-icon>
+					<div class="ml-2">
 						<h4>{{ roomName }}</h4>
+					</div>
+					<div class="ml-2" style="font-size:10px">
+						[↓ 날짜순 ↓]
+					</div>
+					<div>
+						<span class="ml-12" style="	font-size:11px; color:red">
+							{{
+								messages[0].userCount == 2 ? '상대방 입장중' : '상대방 퇴장중'
+							}}</span
+						>
 					</div>
 				</div>
 			</v-card-title>
@@ -22,35 +40,107 @@
 				</li>
 			</ul> -->
 
-			<div v-for="(message, index) in messages" v-bind:key="index">
-				<v-list-item>
-					<v-list-item-action>
-						<span>{{ message.sender }}</span>
-					</v-list-item-action>
-					<v-list-item-content>
-						<v-list-item-title>{{ message.message }}</v-list-item-title>
-					</v-list-item-content>
+			<div class="" v-for="(message, index) in messages" v-bind:key="index">
+				<v-list-item
+					class=""
+					v-if="nickname == message.sender"
+					style="display: flex; justify-content: right; align-items: right;"
+				>
+					<div
+						class="pl-2 pr-2 pt-2 pb-2"
+						style=" border-radius: 15px; background-color :  #fff333; display: flex;flex-direction:row;"
+					>
+						<div>
+							<v-list-item-title>{{ message.message }}</v-list-item-title>
+						</div>
+						<div
+							class="ml-2"
+							style="font-size:8px; display: flex; justify-content: center; align-items: center;"
+						>
+							{{ message.createAt | timeForToday }}
+						</div>
+					</div>
+				</v-list-item>
+
+				<v-list-item
+					v-else-if="basicNickname == message.sender"
+					style="
+					display: flex; justify-content: center; align-items: center;"
+				>
+					<div
+						class="pl-2 pr-2 pt-2 pb-2"
+						style=" border-radius: 15px;background-color :#ffffff; display: flex; flex-direction:row;"
+					>
+						<div class="mr-2">
+							<span>{{ message.sender }}</span>
+						</div>
+						<div>
+							<v-list-item-title>{{ message.message }}</v-list-item-title>
+						</div>
+					</div>
+				</v-list-item>
+
+				<v-list-item
+					v-else
+					style="
+					display: flex; justify-content: left; align-items: left;"
+				>
+					<div
+						class="pl-2 pr-2 pt-2 pb-2"
+						style="border-radius: 15px;background-color : #e1faf3 ; display: flex;  flex-direction:row;"
+					>
+						<div class="mr-2">
+							<span>{{ message.sender }}</span>
+						</div>
+						<div>
+							<v-list-item-title>{{ message.message }}</v-list-item-title>
+						</div>
+						<div
+							class="ml-2"
+							style="font-size:8px; display: flex; justify-content: center; align-items: center;"
+						>
+							{{ message.createAt | timeForToday }}
+						</div>
+					</div>
 				</v-list-item>
 				<v-divider inset></v-divider>
 			</div>
-
-			<div fixed class="ml-7" style="display:flex;flex-direction:row">
-				<v-form>
+		</v-card>
+		<div style="display: flex; justify-content: center; align-items: center;">
+			<v-bottom-navigation
+				class="mb-16"
+				height="80"
+				style="display: flex; justify-content: center; align-items: center;"
+				color="#ff6d00"
+				fixed
+			>
+				<div
+					class="mr-2 ml-2 mt-2 mb-2"
+					fixed
+					style="display:flex;flex-direction:row; "
+				>
 					<v-text-field
 						v-model="message"
 						counter="50"
 						autocomplete="off"
 						label="채팅"
 						prepend-icon="mdi-chat-processing"
+						@keyup.enter="sendMessage('TALK')"
+						style="display: flex; justify-content: center; align-items: center;"
 					></v-text-field>
-				</v-form>
-				<v-card-actions @click="sendMessage('TALK')">
-					<v-btn color="yellow" small style="" class="rounded-pill"
-						>보내기</v-btn
+
+					<v-card-actions
+						@click="sendMessage('TALK')"
+						style="display: flex; justify-content: center; align-items: center;"
 					>
-				</v-card-actions>
-			</div>
-		</v-card>
+						<v-btn color="yellow" small style="" class="rounded-pill"
+							>보내기</v-btn
+						>
+					</v-card-actions>
+				</div>
+			</v-bottom-navigation>
+		</div>
+
 		<br />
 		<br />
 		<br />
@@ -88,6 +178,7 @@ export default {
 			// userCount: 0,
 			connected: null,
 			messageCount: 0,
+			basicNickname: '[알림]',
 		};
 	},
 	computed: {
@@ -130,6 +221,7 @@ export default {
 		this.roomName = localStorage.getItem('wschat.roomName');
 		this.userId = localStorage.getItem('loginUserId');
 		this.token = localStorage.getItem('jwt');
+		this.nickname = localStorage.getItem('nicname');
 		var _this = this;
 		await this.findAllMessage2();
 		await this.connect();
@@ -200,6 +292,7 @@ export default {
 						},
 						function(error) {
 							alert('서버 연결에 실패 하였습니다. 다시 접속해 주십시요.');
+
 							// location.href = 'http://localhost:8080/chat/room';
 						}
 					);
@@ -207,7 +300,6 @@ export default {
 				});
 		},
 		sendMessage: async function(type) {
-			console.log('여긴들어왔니?');
 			ws.send(
 				'/pub/chat/message',
 				{ token: localStorage.getItem('jwt') },

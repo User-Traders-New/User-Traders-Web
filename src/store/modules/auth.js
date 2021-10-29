@@ -142,6 +142,7 @@ const actions = {
 				console.log(err);
 			});
 	},
+	//상세정보 페이지 좋아요 +1 , -1
 	likeAddDelete2({ commit }, payload) {
 		return http
 			.process(
